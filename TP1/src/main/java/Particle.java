@@ -1,9 +1,9 @@
 package main.java;
 
 public class Particle {
-    private int id;
-    private double radius;
-    private int color;
+    private final int id;
+    private final double radius;
+    private final int color;
     private double x;
     private double y;
 
@@ -33,5 +33,13 @@ public class Particle {
 
     public int getId() {
         return id;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y){
+        this.y = y;
     }
 }
