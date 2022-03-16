@@ -13,7 +13,7 @@ public class CIM {
 
     public static void main(String[] args) throws IOException {
 
-        if(args.length != 4 && args.length != 5){
+        if(args.length != 5 && args.length != 6){
             throw new IllegalArgumentException("Invalid parameters");
         }
         File staticFile = new File(args[0]);
@@ -24,14 +24,15 @@ public class CIM {
 
         double rMax = 0;
         int N = 0;
-        double rc = 0;
         int L = 0;
         int M = 0;
 
-        rc = Double.parseDouble(args[3]);
+        double rc = Double.parseDouble(args[3]);
+        boolean contourProp = Boolean.parseBoolean(args[4]);
+
 
         //check is parameter M exists
-        if(args.length == 5){
+        if(args.length == 6){
             M = Integer.parseInt(args[4]);
         }
 
@@ -63,7 +64,7 @@ public class CIM {
 
         System.out.println(particles);
 
-        HashMap<Integer,List<Integer>> neighbours = matrix.getNeighbours(true);
+        HashMap<Integer,List<Integer>> neighbours = matrix.getNeighbours(contourProp);
 
         CIMHelper.generateOutputFile(neighbours,path);
 
