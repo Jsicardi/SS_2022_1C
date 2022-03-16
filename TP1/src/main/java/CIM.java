@@ -13,6 +13,8 @@ public class CIM {
 
     public static void main(String[] args) throws IOException {
 
+        long startTime = System.currentTimeMillis();
+
         if(args.length != 5 && args.length != 6){
             throw new IllegalArgumentException("Invalid parameters");
         }
@@ -33,7 +35,7 @@ public class CIM {
 
         //check is parameter M exists
         if(args.length == 6){
-            M = Integer.parseInt(args[4]);
+            M = Integer.parseInt(args[5]);
         }
 
         //parse the quantity of particles(N) and the size of the square grid(L)
@@ -62,11 +64,12 @@ public class CIM {
 
         CIMMatrix matrix = new CIMMatrix(L,rMax,rc,particles,M);
 
-        System.out.println(particles);
-
         HashMap<Integer,List<Integer>> neighbours = matrix.getNeighbours(contourProp);
 
         CIMHelper.generateOutputFile(neighbours,path);
+
+        long endTime = System.currentTimeMillis();
+        System.out.println(endTime - startTime);
 
     }
 
