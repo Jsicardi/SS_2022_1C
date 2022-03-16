@@ -15,7 +15,7 @@ public class CIMMatrix {
     public CIMMatrix(int l, double rmax, double rc, List<Particle> particles,int M) {
         this.l = l;
         this.rmax = rmax;
-        this.m = M > 0? M : (int) Math.ceil(l/(rc+rmax));
+        this.m = M > 0? M : (int) Math.ceil(l/(rc+2*rmax));
         this.rc = rc;
         matrix = new Cell[m][m];
         fillMatrix(particles);
