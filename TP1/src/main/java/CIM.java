@@ -49,23 +49,13 @@ public class CIM {
 
         CIMHelper.getDynamicProperties(myDynamicReader,particles);
 
-        //CIMMatrix matrix = new CIMMatrix(L,rMax,rc,particles);
+        CIMMatrix matrix = new CIMMatrix(L,rMax,rc,particles);
 
         System.out.println(particles);
 
-        HashMap<Integer,List<Integer>> neighbours = new HashMap<>();
-        neighbours.put(1, new ArrayList<>());
-        neighbours.get(1).add(2);
-        neighbours.get(1).add(3);
-        neighbours.put(2, new ArrayList<>());
-        neighbours.get(2).add(1);
-        neighbours.put(3, new ArrayList<>());
-        neighbours.get(3).add(1);
-        neighbours.put(4, new ArrayList<>());
+        HashMap<Integer,List<Integer>> neighbours = matrix.getNeighbours(true);
 
-        //HashMap<Integer, List<Integer>> neighbours = matrix.getNeighbours();
-
-        CIMHelper.generateOutput(neighbours);
+        CIMHelper.generateOutputFile(neighbours);
 
     }
 

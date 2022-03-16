@@ -69,7 +69,7 @@ public abstract class CIMHelper {
         }
     }
 
-    public static void generateOutput(HashMap<Integer, List<Integer>> neighbours) throws IOException {
+    public static void generateOutputFile(HashMap<Integer, List<Integer>> neighbours) throws IOException {
         File output = new File("neighbours.txt");
         output.createNewFile();
         StringBuilder builder;

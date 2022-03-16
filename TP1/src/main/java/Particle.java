@@ -51,4 +51,8 @@ public class Particle {
     public void setY(double y){
         this.y = y;
     }
+
+    public double getDistance(Particle particle){
+        return Math.sqrt(Math.pow(x - particle.getX(),2) + Math.pow(y - particle.getY(),2)) - radius - particle.getRadius();
+    }
 }
