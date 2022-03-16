@@ -69,12 +69,12 @@ public abstract class CIMHelper {
         }
     }
 
-    public static void generateOutputFile(HashMap<Integer, List<Integer>> neighbours) throws IOException {
-        File output = new File("neighbours.txt");
+    public static void generateOutputFile(HashMap<Integer, List<Integer>> neighbours, String path) throws IOException {
+        File output = new File(path);
         output.createNewFile();
         StringBuilder builder;
 
-        FileWriter writer = new FileWriter("neighbours.txt");
+        FileWriter writer = new FileWriter(path);
 
         for(int particleId : neighbours.keySet()){
             List<Integer> neighboursIds = neighbours.get(particleId);

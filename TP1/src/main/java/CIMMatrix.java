@@ -12,10 +12,10 @@ public class CIMMatrix {
     private final int m;
     private final double rc;
 
-    public CIMMatrix(int l, double rmax, double rc, List<Particle> particles) {
+    public CIMMatrix(int l, double rmax, double rc, List<Particle> particles,int M) {
         this.l = l;
         this.rmax = rmax;
-        this.m = (int) Math.ceil(l/(rc+rmax));
+        this.m = M > 0? M : (int) Math.ceil(l/(rc+rmax));
         this.rc = rc;
         matrix = new Cell[m][m];
         fillMatrix(particles);
