@@ -3,16 +3,25 @@ package main.java;
 public class Particle {
     private final int id;
     private final double radius;
-    private final int color;
+    private final double mass;
     private double x;
     private double y;
 
-    public Particle(int id, double radius, int color, double x, double y) {
+    public Particle(int id, double radius, double mass) {
         this.id = id;
         this.radius = radius;
-        this.color = color;
-        this.x = x;
-        this.y = y;
+        this.mass = mass;
+    }
+
+    @Override
+    public String toString() {
+        return "Particle{" +
+                "id=" + id +
+                ", radius=" + radius +
+                ", mass=" + mass +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
     }
 
     public double getRadius() {
@@ -27,8 +36,8 @@ public class Particle {
         return y;
     }
 
-    public int getColor() {
-        return color;
+    public double getMass() {
+        return mass;
     }
 
     public int getId() {
