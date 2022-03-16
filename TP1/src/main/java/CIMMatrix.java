@@ -63,7 +63,7 @@ public class CIMMatrix {
                         }
                         if(j<m-1) {
                             checkNeighbours(particle,neighbours, matrix[i][j+1].getParticles());
-                            if(1<m-1){
+                            if(i<m-1){
                                 checkNeighbours(particle,neighbours, matrix[i+1][j+1].getParticles());
                             }
                             if (i > 0){
