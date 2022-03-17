@@ -69,7 +69,7 @@ public class CIM {
         CIMHelper.generateOutputFile(neighbours,path);
 
         long endTime = System.currentTimeMillis();
-        System.out.println(endTime - startTime);
+        System.out.printf("Time: %d ms\n", endTime - startTime);
 
     }
 

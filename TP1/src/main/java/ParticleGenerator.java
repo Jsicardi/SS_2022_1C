@@ -3,6 +3,7 @@ package main.java;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 
 public class ParticleGenerator {
     public static void main(String[] args) throws IOException {
@@ -18,25 +19,25 @@ public class ParticleGenerator {
         rMax = Double.parseDouble(args[2]);
         sameR = Boolean.parseBoolean(args[3]);
 
-        File staticAns = new File("staticAns.txt");
+        File staticAns = new File("static_rand.txt");
         staticAns.createNewFile();
-        File dynamicAns = new File("dynamicAns.txt");
+        File dynamicAns = new File("dynamic_rand.txt");
         dynamicAns.createNewFile();
 
-        FileWriter staticWriter = new FileWriter("staticAns.txt");
-        FileWriter dynamicWriter = new FileWriter("dynamicAns.txt");
+        FileWriter staticWriter = new FileWriter("static_rand.txt");
+        FileWriter dynamicWriter = new FileWriter("dynamic_rand.txt");
 
         staticWriter.write("    " + n + "\n    " + l);
         dynamicWriter.write("   " + 0);
 
         double x,y, r = rMax;
         for (int i = 0; i<n; i++) {
-            x = Math.random() * l;
-            y = Math.random() * l;
             if (!sameR){
                 r = Math.random() * rMax;
             }
-            staticWriter.write("\n    " + r + "    " + 1.0000); //el weight sigue en 1
+            x = r + (((l-r) -r) * Math.random());
+            y = r + (((l-r) -r) * Math.random());
+            staticWriter.write("\n    " + r + "    " + 1.0000); //aditional property default in 1
             dynamicWriter.write("\n   " + x + "   " + y);
         }
         staticWriter.close();
