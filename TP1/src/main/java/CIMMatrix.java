@@ -6,24 +6,25 @@ import java.util.List;
 
 public class CIMMatrix {
 
-    private Cell[][] matrix;
+    private final Cell[][] matrix;
     private final int l;
-    private final double rMax;
-    private final int m;
+    private int m;
     private final double rc;
 
     public CIMMatrix(int l, double rMax, double rc, List<Particle> particles,int M) {
         this.l = l;
-        this.rMax = rMax;
         this.m = M > 0? M : (int) Math.floor(l/(rc+2*rMax));
+        if (m == 0) {
+            m = 1;
+        }
         this.rc = rc;
         matrix = new Cell[m][m];
         fillMatrix(particles);
     }
 
     private void fillMatrix(List<Particle> particles) {
-        int rowIndex=0;
-        int colIndex=0;
+        int rowIndex;
+        int colIndex;
 
         for(int i = 0; i < m; i++){
             for(int j = 0; j < m; j++){
