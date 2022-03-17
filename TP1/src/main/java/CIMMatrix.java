@@ -8,14 +8,14 @@ public class CIMMatrix {
 
     private Cell[][] matrix;
     private final int l;
-    private final double rmax;
+    private final double rMax;
     private final int m;
     private final double rc;
 
-    public CIMMatrix(int l, double rmax, double rc, List<Particle> particles,int M) {
+    public CIMMatrix(int l, double rMax, double rc, List<Particle> particles,int M) {
         this.l = l;
-        this.rmax = rmax;
-        this.m = M > 0? M : (int) Math.ceil(l/(rc+2*rmax));
+        this.rMax = rMax;
+        this.m = M > 0? M : (int) Math.floor(l/(rc+2*rMax));
         this.rc = rc;
         matrix = new Cell[m][m];
         fillMatrix(particles);
