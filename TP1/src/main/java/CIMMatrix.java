@@ -20,7 +20,6 @@ public class CIMMatrix {
         if (m == 0) {
             m = 1;
         }
-        System.out.println(m);
         this.rc = rc;
         matrix = new Cell[m][m];
         fillMatrix(particles);
@@ -56,23 +55,23 @@ public class CIMMatrix {
 
                     if (withContour){ //with periodic contour
                         checkSelf(neighbours.get(particle.getId()), particle, matrix[i][j].getParticles());
-                        checkNeighbours(particle,neighbours, matrix[(i+m-1)%m][(j+1)%m].getParticles());
-                        checkNeighbours(particle,neighbours, matrix[i][(j+1)%m].getParticles());
-                        checkNeighbours(particle,neighbours, matrix[(i+1)%m][(j+1)%m].getParticles());
-                        checkNeighbours(particle,neighbours, matrix[(i+1)%m][j].getParticles());
+                        checkNeighbours(particle,neighbours, matrix[(i+m-1)%m][(j+1)%m].getParticles(), true);
+                        checkNeighbours(particle,neighbours, matrix[i][(j+1)%m].getParticles(), true);
+                        checkNeighbours(particle,neighbours, matrix[(i+1)%m][(j+1)%m].getParticles(), true);
+                        checkNeighbours(particle,neighbours, matrix[(i+1)%m][j].getParticles(), true);
 
                     }else {
                         checkSelf(neighbours.get(particle.getId()), particle, matrix[i][j].getParticles());
                         if(i<m-1){
-                            checkNeighbours(particle,neighbours, matrix[i+1][j].getParticles());
+                            checkNeighbours(particle,neighbours, matrix[i+1][j].getParticles(), false);
                         }
                         if(j<m-1) {
-                            checkNeighbours(particle,neighbours, matrix[i][j+1].getParticles());
+                            checkNeighbours(particle,neighbours, matrix[i][j+1].getParticles(), false);
                             if(i<m-1){
-                                checkNeighbours(particle,neighbours, matrix[i+1][j+1].getParticles());
+                                checkNeighbours(particle,neighbours, matrix[i+1][j+1].getParticles(), false);
                             }
                             if (i > 0){
-                                checkNeighbours(particle,neighbours, matrix[i-1][j+1].getParticles());
+                                checkNeighbours(particle,neighbours, matrix[i-1][j+1].getParticles(), false);
                             }
                         }
                     }
@@ -85,17 +84,18 @@ public class CIMMatrix {
     private void checkSelf(List<Integer> neighbours, Particle particle, List<Particle> neighbourCell){
         for(Particle neighbour : neighbourCell){
             if(neighbour.getId() != particle.getId()){ //avoids adding neighbours in the same cell twice
-                if(particle.getDistance(neighbour) <= rc){
+                if(particle.getDistance(neighbour,l,false) <= rc){
                     neighbours.add(neighbour.getId());
                 }
             }
         }
     }
 
-    private void checkNeighbours(Particle particle, HashMap<Integer, List<Integer>> neighbours, List<Particle> neighbourCell){
+    private void checkNeighbours(Particle particle, HashMap<Integer, List<Integer>> neighbours, List<Particle> neighbourCell, boolean withContour){
+        double distance;
         for (Particle neighbour : neighbourCell) {
-
-            if(particle.getDistance(neighbour) <= rc){
+            distance = particle.getDistance(neighbour,l,withContour);
+            if(distance <= rc){
                 neighbours.get(particle.getId()).add(neighbour.getId());
                 if(!neighbours.containsKey(neighbour.getId())){
                     neighbours.put(neighbour.getId(), new ArrayList<>());

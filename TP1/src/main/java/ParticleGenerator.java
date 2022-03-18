@@ -8,16 +8,18 @@ import java.util.Random;
 public class ParticleGenerator {
     public static void main(String[] args) throws IOException {
 
-        if(args.length != 4){
+        if(args.length != 5){
             throw new IllegalArgumentException("Invalid parameters");
         }
         int n, l;
         double rMax;
         boolean sameR;
+        boolean isPeriodic;
         n = Integer.parseInt(args[0]);
         l = Integer.parseInt(args[1]);
         rMax = Double.parseDouble(args[2]);
         sameR = Boolean.parseBoolean(args[3]);
+        isPeriodic = Boolean.parseBoolean(args[4]);
 
         File staticAns = new File("static_rand.txt");
         staticAns.createNewFile();
@@ -35,8 +37,14 @@ public class ParticleGenerator {
             if (!sameR){
                 r = Math.random() * rMax;
             }
-            x = r + (((l-r) -r) * Math.random());
-            y = r + (((l-r) -r) * Math.random());
+            if(!isPeriodic) {
+                x = r + (((l - r) - r) * Math.random());
+                y = r + (((l - r) - r) * Math.random());
+            }
+            else{
+                x = l* Math.random();
+                y = l * Math.random();
+            }
             staticWriter.write("\n    " + r + "    " + 1.0000); //aditional property default in 1
             dynamicWriter.write("\n   " + x + "   " + y);
         }

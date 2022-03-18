@@ -52,7 +52,16 @@ public class Particle {
         this.y = y;
     }
 
-    public double getDistance(Particle particle){
-        return Math.sqrt(Math.pow(x - particle.getX(),2) + Math.pow(y - particle.getY(),2)) - radius - particle.getRadius();
+    public double getDistance(Particle particle, int L,boolean withContour){
+        double deltaX = Math.abs(x-particle.getX());
+        double deltaY = Math.abs(y-particle.getY());
+
+        if(withContour) {
+            deltaX -= deltaX > ((L*1.0f) / 2 ) ? L : 0;
+            deltaY -= deltaY > ((L*1.0f) / 2) ? L : 0;
+        }
+
+        return Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY,2)) - radius - particle.getRadius();
     }
+
 }
