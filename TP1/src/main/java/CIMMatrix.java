@@ -14,6 +14,9 @@ public class CIMMatrix {
     public CIMMatrix(int l, double rMax, double rc, List<Particle> particles,int M) {
         this.l = l;
         this.m = M > 0? M : (int) Math.floor(l/(rc+2*rMax));
+        if(m == Math.floor(l/(rc+2*rMax))){ //respect the < strict in case m was already an int before casting
+            m -=1;
+        }
         if (m == 0) {
             m = 1;
         }
