@@ -36,8 +36,8 @@ public class CIMMatrix {
         }
 
         for (Particle particle : particles) {
-            rowIndex = ((int) (particle.getX() / (l / m))) % m;
-            colIndex = ((int) (particle.getY() / (l / m))) % m;
+            rowIndex = ((int) (particle.getX() / ((float) l / m))) % m;
+            colIndex = ((int) (particle.getY() / ((float) l / m))) % m;
             matrix[rowIndex][colIndex].add(particle);
         }
     }
