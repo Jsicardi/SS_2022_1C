@@ -39,6 +39,7 @@ public class OffLatticeMethod {
             HashMap<Integer, List<Integer>> neighbours = cimMatrix.getNeighbours(true);
 
 
+
             //Calculate new directions (add new particle to new list because we need data from all neighbouring particles for every direction update)
             particles = updateDirection(particles, neighbours);
         }
@@ -49,7 +50,7 @@ public class OffLatticeMethod {
         double newX = p.getX() + p.getV() * Math.cos(p.getTheta());
         double newY = p.getY() + p.getV() * Math.sin(p.getTheta());
 
-        //Check if particle should move to other side of board (this is with contour)
+        //Check if particle should move to other side of board (periodic contour condition)
         if (newX > l)
             newX = newX - l;
         else if (newX < 0)
@@ -71,22 +72,22 @@ public class OffLatticeMethod {
             //Get random noise for angle between -n/2 and n/2
             double noise = ((Math.random() * (-n - n)) + -n)/2;
 
-            //New particles with updated theta so as to not lose current data for other particles direction update calculation
-            double numerator = 0;
-            double denominator = 0;
+            //New particles with updated theta to avoid losing current data for other particle's direction update calculation
+            double promSin = Math.sin(p.getTheta());
+            double promCos = Math.cos(p.getTheta());
             List<Integer> neighboursIds = neighboursMap.get(p.getId());
             List<ExtendedParticle> neighbours = new ArrayList<>();
             for (Integer id:neighboursIds){
                 neighbours.add(particles.get(id));
             }
             for (ExtendedParticle n:neighbours){
-                numerator += Math.sin(n.getTheta());
-                denominator += Math.cos(n.getTheta());
+                promSin += Math.sin(n.getTheta());
+                promCos += Math.cos(n.getTheta());
             }
 
-            double atanValue = (numerator / denominator) % (2*Math.PI);
+            //double atanValue = (numerator / denominator) % (2*Math.PI);
             //double newTheta = Math.atan(atanValue);
-            double newTheta = Math.atan2(Math.sin(atanValue), Math.cos(atanValue));
+            double newTheta = Math.atan2(p.getV() * promCos,p.getV() * promSin);
 
             newMap.put(p.getId(), new ExtendedParticle(p.getId(), p.getX(), p.getY(), p.getV(), (newTheta + noise) % (2*Math.PI)));
         }

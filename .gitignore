@@ -28,8 +28,5 @@ target/
 hs_err_pid*
 
 #TP1
-neighbours.txt
-data_ovito.txt
-static_rand.txt
-dynamic_rand.txt
+*.txt
 
