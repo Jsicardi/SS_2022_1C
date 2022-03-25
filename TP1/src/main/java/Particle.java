@@ -1,11 +1,11 @@
 package main.java;
 
 public class Particle {
-    private final int id;
-    private final double radius;
-    private final double mass;
-    private double x;
-    private double y;
+    protected final int id;
+    protected final double radius;
+    protected final double mass;
+    protected double x;
+    protected double y;
 
     public Particle(int id, double radius, double mass) {
         this.id = id;
