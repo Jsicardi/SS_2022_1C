@@ -6,9 +6,9 @@ public class OffLattice {
 
     public static void main(String[] args) throws IOException {
 
-        //args = [static,dynamic,final_arch,steps]
+        long startTime = System.currentTimeMillis();
 
-        if(args.length != 4){
+        if(args.length != 6){
             throw new IllegalArgumentException("Invalid parameters");
         }
 
@@ -17,12 +17,12 @@ public class OffLattice {
         File dynamicFile = new File(args[1]);
         Scanner myDynamicReader = new Scanner(dynamicFile);
         String path = args[2];
-        int steps = Integer.parseInt(args[3]);
 
         int N = 0;
         int L = 0;
-        double r = 0;
-        double n = 0;
+        double r = Double.parseDouble(args[3]);
+        double n = Double.parseDouble(args[4]);
+        int steps = Integer.parseInt(args[5]);
 
         //parse the quantity of particles(N) and the size of the square grid(L)
         if(myStaticReader.hasNextLine()){
@@ -30,14 +30,6 @@ public class OffLattice {
         }
         if(myStaticReader.hasNextLine()){
             L = Integer.parseInt(myStaticReader.nextLine().trim().replaceAll("\\s+", ""));
-        }
-
-        //parse the interaction radius(r) and the noise factor (n)
-        if(myStaticReader.hasNextLine()){
-            r = Double.parseDouble(myStaticReader.nextLine().trim().replaceAll("\\s+", ""));
-        }
-        if(myStaticReader.hasNextLine()){
-            n = Double.parseDouble(myStaticReader.nextLine().trim().replaceAll("\\s+", ""));
         }
 
         Map<Integer,ExtendedParticle> particles = new HashMap<>();
@@ -51,5 +43,9 @@ public class OffLattice {
         OffLatticeHelper.createOutputFile(path,steps);
 
         method.offLattice();
+
+        long endTime = System.currentTimeMillis();
+        System.out.printf("Time: %d ms\n", endTime - startTime);
+
     }
 }

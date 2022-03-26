@@ -5,16 +5,14 @@ import java.io.IOException;
 public class ParticleGenerator {
     public static void main(String[] args) throws IOException {
 
-        if(args.length != 5){
+        if(args.length != 3){
             throw new IllegalArgumentException("Invalid parameters");
         }
         int n, l;
-        double r, noise, speed;
+        double speed;
         n = Integer.parseInt(args[0]);
         l = Integer.parseInt(args[1]);
-        r = Double.parseDouble(args[2]);
-        noise = Double.parseDouble(args[3]);
-        speed = Double.parseDouble(args[4]);
+        speed = Double.parseDouble(args[2]);
         File staticAns = new File("static_rand.txt");
         staticAns.createNewFile();
         File dynamicAns = new File("dynamic_rand.txt");
@@ -23,7 +21,7 @@ public class ParticleGenerator {
         FileWriter staticWriter = new FileWriter("static_rand.txt");
         FileWriter dynamicWriter = new FileWriter("dynamic_rand.txt");
 
-        staticWriter.write(n + "\n" + l + "\n" + r + "\n" + noise);
+        staticWriter.write(n + "\n" + l);
         staticWriter.close();
         dynamicWriter.write("   " + 0);
 

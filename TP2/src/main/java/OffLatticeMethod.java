@@ -25,7 +25,7 @@ public class OffLatticeMethod {
     public void offLattice() throws IOException {
 
         CIMMatrix cimMatrix;
-        for (int i = 0; i < steps; i++) {
+        for (int i = 0; i <= steps; i++) {
             //Save positions and theta for output (maybe write to file here)
             OffLatticeHelper.addOutputStep(new ArrayList<>(particles.values()),i);
 
@@ -85,8 +85,6 @@ public class OffLatticeMethod {
                 promCos += Math.cos(n.getTheta());
             }
 
-            //double atanValue = (numerator / denominator) % (2*Math.PI);
-            //double newTheta = Math.atan(atanValue);
             double newTheta = Math.atan2(p.getV() * promCos,p.getV() * promSin);
 
             newMap.put(p.getId(), new ExtendedParticle(p.getId(), p.getX(), p.getY(), p.getV(), (newTheta + noise) % (2*Math.PI)));
