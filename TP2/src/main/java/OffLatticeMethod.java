@@ -70,7 +70,7 @@ public class OffLatticeMethod {
 
         for (ExtendedParticle p: particles.values()){
             //Get random noise for angle between -n/2 and n/2
-            double noise = ((Math.random() * (-n - n)) + -n)/2;
+            double noise = ((Math.random() * 2*n) - n)/2;
 
             //New particles with updated theta to avoid losing current data for other particle's direction update calculation
             double promSin = Math.sin(p.getTheta());
@@ -85,7 +85,7 @@ public class OffLatticeMethod {
                 promCos += Math.cos(n.getTheta());
             }
 
-            double newTheta = Math.atan2(p.getV() * promCos,p.getV() * promSin);
+            double newTheta = Math.atan2(p.getV() * promSin,p.getV() * promCos);
 
             newMap.put(p.getId(), new ExtendedParticle(p.getId(), p.getX(), p.getY(), p.getV(), (newTheta + noise) % (2*Math.PI)));
         }
