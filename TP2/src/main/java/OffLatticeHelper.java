@@ -51,7 +51,7 @@ public abstract class OffLatticeHelper {
 
         StringBuilder builder;
 
-        fileWriter.write(String.format("%d\n", step));
+        fileWriter.write(String.format("%d\n\n", step));
         for(ExtendedParticle particle: particles){
             builder = new StringBuilder();
             builder.append(particle.getId()).append("\t").append(particle.getX()).append("\t").append(particle.getY()).append("\t").append(particle.getV()).append("\t").append(particle.getTheta()).append("\t");
