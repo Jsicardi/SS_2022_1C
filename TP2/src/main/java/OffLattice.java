@@ -8,7 +8,7 @@ public class OffLattice {
 
         long startTime = System.currentTimeMillis();
 
-        if(args.length != 6){
+        if(args.length != 7){
             throw new IllegalArgumentException("Invalid parameters");
         }
 
@@ -16,13 +16,16 @@ public class OffLattice {
         Scanner myStaticReader = new Scanner(staticFile);
         File dynamicFile = new File(args[1]);
         Scanner myDynamicReader = new Scanner(dynamicFile);
-        String path = args[2];
+        String positionsPath = args[2];
+        String vaPath = args[3];
+
+
 
         int N = 0;
         int L = 0;
-        double r = Double.parseDouble(args[3]);
-        double n = Double.parseDouble(args[4]);
-        int steps = Integer.parseInt(args[5]);
+        double r = Double.parseDouble(args[4]);
+        double n = Double.parseDouble(args[5]);
+        int steps = Integer.parseInt(args[6]);
 
         //parse the quantity of particles(N) and the size of the square grid(L)
         if(myStaticReader.hasNextLine()){
@@ -40,7 +43,7 @@ public class OffLattice {
 
         OffLatticeMethod method = new OffLatticeMethod(L,r,n,particles,steps);
 
-        OffLatticeHelper.createOutputFile(path,steps);
+        OffLatticeHelper.createOutputFiles(positionsPath,vaPath,steps);
 
         method.offLattice();
 

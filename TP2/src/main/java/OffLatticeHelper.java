@@ -7,7 +7,8 @@ import static java.lang.System.exit;
 
 public abstract class OffLatticeHelper {
 
-    private static FileWriter fileWriter;
+    private static FileWriter positionsFileWriter;
+    private static FileWriter vaFileWriter;
     private static int steps;
 
     private OffLatticeHelper() {
@@ -39,28 +40,42 @@ public abstract class OffLatticeHelper {
         }
     }
 
-    public static void createOutputFile(String path,int totalSteps) throws IOException {
-        File output = new File(path);
-        output.createNewFile();
-        fileWriter = new FileWriter(path);
+    public static void createOutputFiles(String positionsFile, String vaFile, int totalSteps) throws IOException {
+        File positionsOutput = new File(positionsFile);
+        positionsOutput.createNewFile();
+        positionsFileWriter = new FileWriter(positionsFile);
+
+        File vaOutput= new File(vaFile);
+        vaOutput.createNewFile();
+        vaFileWriter = new FileWriter(vaFile);
+
         steps = totalSteps;
 
     }
 
-    public static void addOutputStep(List<ExtendedParticle> particles,int step) throws IOException {
+    public static void addOutputStep(List<ExtendedParticle> particles,int step, int N) throws IOException {
 
         StringBuilder builder;
 
-        fileWriter.write(String.format("%d\n\n", step));
+        double sinSum= 0,cosSum=0;
+
+        positionsFileWriter.write(String.format("%d\n\n", step));
         for(ExtendedParticle particle: particles){
             builder = new StringBuilder();
             builder.append(particle.getId()).append("\t").append(particle.getX()).append("\t").append(particle.getY()).append("\t").append(particle.getV()).append("\t").append(particle.getTheta()).append("\t");
             builder.replace(builder.length(), builder.length(), "\n");
-            fileWriter.write(builder.toString());
+            positionsFileWriter.write(builder.toString());
+            sinSum+=(Math.sin(particle.getTheta()));
+            cosSum+=(Math.cos(particle.getTheta()));
         }
 
+        double va = Math.sqrt(Math.pow(sinSum,2) + Math.pow(cosSum,2)) / N;
+
+        vaFileWriter.write(String.format("%g\n", va));
+
         if(step == steps) {
-            fileWriter.close();
+            positionsFileWriter.close();
+            vaFileWriter.close();
         }
     }
 }

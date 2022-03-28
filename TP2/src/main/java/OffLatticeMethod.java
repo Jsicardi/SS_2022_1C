@@ -27,7 +27,7 @@ public class OffLatticeMethod {
         CIMMatrix cimMatrix;
         for (int i = 0; i <= steps; i++) {
             //Save positions and theta for output (maybe write to file here)
-            OffLatticeHelper.addOutputStep(new ArrayList<>(particles.values()),i);
+            OffLatticeHelper.addOutputStep(new ArrayList<>(particles.values()),i,particles.size());
 
             //Move particles
             for (ExtendedParticle p : particles.values()) {
@@ -37,8 +37,6 @@ public class OffLatticeMethod {
             //Ask for neighbours of every particle to CIM
             cimMatrix = new CIMMatrix(l,0,r,new ArrayList<>(particles.values()),0);
             HashMap<Integer, List<Integer>> neighbours = cimMatrix.getNeighbours(true);
-
-
 
             //Calculate new directions (add new particle to new list because we need data from all neighbouring particles for every direction update)
             particles = updateDirection(particles, neighbours);
