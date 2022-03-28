@@ -85,7 +85,7 @@ public class OffLatticeMethod {
                 promCos += Math.cos(n.getTheta());
             }
 
-            double newTheta = Math.atan2(p.getV() * promSin,p.getV() * promCos);
+            double newTheta = Math.atan2(promSin,promCos);
 
             newMap.put(p.getId(), new ExtendedParticle(p.getId(), p.getX(), p.getY(), p.getV(), (newTheta + noise) % (2*Math.PI)));
         }
