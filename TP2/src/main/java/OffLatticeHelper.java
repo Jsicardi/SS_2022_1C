@@ -48,6 +48,7 @@ public abstract class OffLatticeHelper {
         File vaOutput= new File(vaFile);
         vaOutput.createNewFile();
         vaFileWriter = new FileWriter(vaFile);
+        vaFileWriter.write("Step\tVa\n");
 
         steps = totalSteps;
 
@@ -71,7 +72,7 @@ public abstract class OffLatticeHelper {
 
         double va = Math.sqrt(Math.pow(sinSum,2) + Math.pow(cosSum,2)) / N;
 
-        vaFileWriter.write(String.format("%g\n", va));
+        vaFileWriter.write(String.format("%d\t%g\n",step,va));
 
         if(step == steps) {
             positionsFileWriter.close();
