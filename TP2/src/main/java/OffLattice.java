@@ -22,7 +22,7 @@ public class OffLattice {
 
 
         int N = 0;
-        int L = 0;
+        double L = 0;
         double r = Double.parseDouble(args[4]);
         double n = Double.parseDouble(args[5]);
         int steps = Integer.parseInt(args[6]);
@@ -32,7 +32,7 @@ public class OffLattice {
             N = Integer.parseInt(myStaticReader.nextLine().trim().replaceAll("\\s+", ""));
         }
         if(myStaticReader.hasNextLine()){
-            L = Integer.parseInt(myStaticReader.nextLine().trim().replaceAll("\\s+", ""));
+            L = Double.parseDouble(myStaticReader.nextLine().trim().replaceAll("\\s+", ""));
         }
 
         Map<Integer,ExtendedParticle> particles = new HashMap<>();

@@ -7,11 +7,11 @@ import java.util.List;
 public class CIMMatrix {
 
     private final Cell[][] matrix;
-    private final int l;
+    private final double l;
     private int m;
     private final double rc;
 
-    public CIMMatrix(int l, double rMax, double rc, List<Particle> particles,int M) {
+    public CIMMatrix(double l, double rMax, double rc, List<Particle> particles,int M) {
         this.l = l;
         this.m = M > 0 && M < l/(rc+2*rMax) ? M : (int) Math.floor(l/(rc+2*rMax));
         if(m == l/(rc+2*rMax)){ //respect the < strict in case m was already an int before casting

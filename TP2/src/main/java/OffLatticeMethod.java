@@ -8,13 +8,13 @@ import java.util.Map;
 
 public class OffLatticeMethod {
 
-    private final int l;
+    private final double l;
     private final double r;
     private final double n;
     private Map<Integer, ExtendedParticle> particles;
     private final int steps;
 
-    public OffLatticeMethod(int l, double r, double n, Map<Integer, ExtendedParticle> particles, int steps) {
+    public OffLatticeMethod(double l, double r, double n, Map<Integer, ExtendedParticle> particles, int steps) {
         this.l = l;
         this.r = r;
         this.n = n;

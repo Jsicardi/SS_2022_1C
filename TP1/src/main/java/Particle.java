@@ -52,7 +52,7 @@ public class Particle {
         this.y = y;
     }
 
-    public double getDistance(Particle particle, int L,boolean withContour){
+    public double getDistance(Particle particle, double L,boolean withContour){
         double deltaX = Math.abs(x-particle.getX());
         double deltaY = Math.abs(y-particle.getY());
 

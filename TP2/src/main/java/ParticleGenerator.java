@@ -8,10 +8,10 @@ public class ParticleGenerator {
         if(args.length != 3){
             throw new IllegalArgumentException("Invalid parameters");
         }
-        int n, l;
-        double speed;
+        int n;
+        double speed, l;
         n = Integer.parseInt(args[0]);
-        l = Integer.parseInt(args[1]);
+        l = Double.parseDouble(args[1]);
         speed = Double.parseDouble(args[2]);
         File staticAns = new File("static_rand.txt");
         staticAns.createNewFile();
