@@ -29,4 +29,6 @@ hs_err_pid*
 
 #TP1
 *.txt
+*.ovito
+*.avi
 
