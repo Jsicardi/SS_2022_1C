@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ public class GasDiffusion {
         double openingLength = Double.parseDouble(args[4]);
         double epsilon = Double.parseDouble(args[5]);
 
-        //parse the quantity of particles(N) and the size of the square grid(L)
+        //parse the quantity of particles(N) and the size of the grid(width*height)
         if(myStaticReader.hasNextLine()){
             N = Integer.parseInt(myStaticReader.nextLine().trim().replaceAll("\\s+", ""));
         }

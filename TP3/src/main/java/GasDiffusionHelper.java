@@ -99,7 +99,7 @@ public abstract class GasDiffusionHelper {
 
         fpFileWriter.write(String.format("%.2f\t%g\t%g\n",lastTime + time,fp, 1-fp));
 
-        lastTime = time;
+        lastTime += time;
     }
 
     public static void closeFiles() throws IOException {

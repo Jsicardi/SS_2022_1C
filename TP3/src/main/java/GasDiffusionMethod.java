@@ -47,7 +47,7 @@ public class GasDiffusionMethod {
             GasDiffusionHelper.addOutputStep(particles,timeToCollision,particleFraction);
 
             // Resolve collision
-            resolveCollission(collisionParticles);
+            resolveCollision(collisionParticles);
 
         }
 
@@ -63,7 +63,7 @@ public class GasDiffusionMethod {
     }
 
 
-    private double timeAgainstWalls(int[] collissionParticles){
+    private double timeAgainstWalls(int[] collisionParticles){
         double timeToCollision = Integer.MAX_VALUE;
         double auxTime = 0;
         double auxY = 0;
@@ -107,8 +107,8 @@ public class GasDiffusionMethod {
 
             if (auxTime < timeToCollision) {
                 timeToCollision = auxTime;
-                collissionParticles[0] = index;
-                collissionParticles[1] = wallIndex;
+                collisionParticles[0] = index;
+                collisionParticles[1] = wallIndex;
             }
 
             // Check vertical collision
@@ -122,7 +122,8 @@ public class GasDiffusionMethod {
 
             if (auxTime < timeToCollision) {
                 timeToCollision = auxTime;
-                collissionParticles[1] = wallIndex;
+                collisionParticles[0] = index;
+                collisionParticles[1] = wallIndex;
             }
 
             index++;
@@ -132,7 +133,7 @@ public class GasDiffusionMethod {
     }
 
 
-    private double timeAgainstParticles(int[] collissionParticles){
+    private double timeAgainstParticles(int[] collisionParticles){
         double timeToCollision = Integer.MAX_VALUE;
         double auxTime = 0;
 
@@ -159,8 +160,8 @@ public class GasDiffusionMethod {
 
                 if (auxTime < timeToCollision){
                     timeToCollision = auxTime;
-                    collissionParticles[0] = i;
-                    collissionParticles[1] = j;
+                    collisionParticles[0] = i;
+                    collisionParticles[1] = j;
                 }
             }
         }
@@ -183,7 +184,7 @@ public class GasDiffusionMethod {
     }
 
 
-    private void resolveCollission(int[] collisionParticles){
+    private void resolveCollision(int[] collisionParticles){
         double vx;
         double vy;
 
@@ -222,10 +223,10 @@ public class GasDiffusionMethod {
         double Jx = (J *deltaX) / sigma;
         double Jy = (J *deltaY) / sigma;
 
-        p1.setVx(p1.getVx() + (Jx/p1.getMass()));
-        p1.setVy(p1.getVy() + (Jy/p1.getMass()));
-        p2.setVx(p2.getVx() - (Jx/p2.getMass()));
-        p2.setVy(p2.getVy() - (Jy/p2.getMass()));
+        particles.get(collisionParticles[0]).setVx(p1.getVx() + (Jx/p1.getMass()));
+        particles.get(collisionParticles[0]).setVy(p1.getVy() + (Jy/p1.getMass()));
+        particles.get(collisionParticles[1]).setVx(p2.getVx() - (Jx/p2.getMass()));
+        particles.get(collisionParticles[1]).setVy(p2.getVy() - (Jy/p2.getMass()));
 
     }
 }
