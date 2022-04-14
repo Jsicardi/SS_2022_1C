@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.*;
 
+
 public class GasDiffusionMethod {
 
     private final double height;
@@ -114,7 +115,6 @@ public class GasDiffusionMethod {
     private void analyzeWalls(List<Particle> currentParticles){
         double auxTime;
         double auxY;
-        int index = 0;
         for (Particle p : currentParticles){
             // Check horizontal collision
             if (p.getVx() > 0){
@@ -122,42 +122,41 @@ public class GasDiffusionMethod {
                     auxTime = (width/2 - p.getRadius() - p.getX()) / p.getVx();
                     auxY = (auxTime * p.getVy()) + p.getY();
                     if(auxY >= (height/2 + openingLength/2) || auxY <= (height/2 - openingLength/2)){
-                        collisions.add(new Collision(currentTime + auxTime,index,MIDDLE_WALL));
+                        collisions.add(new Collision(currentTime + auxTime,p.getId()-1,MIDDLE_WALL));
                     }
                     else{
                         auxTime = (width - p.getRadius() - p.getX())/p.getVx();
-                        collisions.add(new Collision(currentTime + auxTime,index,RIGHT_WALL));
+                        collisions.add(new Collision(currentTime + auxTime,p.getId()-1,RIGHT_WALL));
                     }
                 } else {
                     auxTime = (width - p.getRadius() - p.getX())/p.getVx();
-                    collisions.add(new Collision(currentTime + auxTime,index,RIGHT_WALL));
+                    collisions.add(new Collision(currentTime + auxTime,p.getId()-1,RIGHT_WALL));
                 }
             } else {
                 if (p.getX() > width/2){     // Is in right enclosure going left. Check if collision would be with middle wall or right wall
                     auxTime = (width/2 + p.getRadius() - p.getX()) / p.getVx();
                     auxY = (auxTime * p.getVy()) + p.getY();
                     if(auxY >= (height/2 + openingLength/2) || auxY <= (height/2 - openingLength/2)){
-                        collisions.add(new Collision(currentTime + auxTime,index,MIDDLE_WALL));
+                        collisions.add(new Collision(currentTime + auxTime,p.getId()-1,MIDDLE_WALL));
                     }
                     else{
                         auxTime = (p.getRadius() - p.getX())/p.getVx();
-                        collisions.add(new Collision(currentTime + auxTime,index,LEFT_WALL));
+                        collisions.add(new Collision(currentTime + auxTime,p.getId()-1,LEFT_WALL));
                     }
                 } else {
                     auxTime = (p.getRadius() - p.getX())/p.getVx();
-                    collisions.add(new Collision(currentTime + auxTime,index,LEFT_WALL));
+                    collisions.add(new Collision(currentTime + auxTime,p.getId()-1,LEFT_WALL));
                 }
             }
 
             // Check vertical collision
             if (p.getVy() > 0){
                 auxTime = (height - p.getRadius() - p.getY())/p.getVy();
-                collisions.add(new Collision(currentTime + auxTime,index,UPPER_WALL));
+                collisions.add(new Collision(currentTime + auxTime,p.getId()-1,UPPER_WALL));
             } else {
                 auxTime = (p.getRadius() - p.getY())/p.getVy();
-                collisions.add(new Collision(currentTime + auxTime,index,DOWN_WALL));
+                collisions.add(new Collision(currentTime + auxTime,p.getId()-1,DOWN_WALL));
             }
-            index++;
         }
     }
 
