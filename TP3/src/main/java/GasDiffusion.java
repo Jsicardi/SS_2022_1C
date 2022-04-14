@@ -31,7 +31,7 @@ public class GasDiffusion {
             N = Integer.parseInt(myStaticReader.nextLine().trim().replaceAll("\\s+", ""));
         }
         if(myStaticReader.hasNextLine()){
-            width = Double.parseDouble(myStaticReader.nextLine().trim().replaceAll("\\s+", ""));
+            width = Double.parseDouble(myStaticReader.nextLine().trim().replaceAll("\\s+", ""))*2;
         }
         if(myStaticReader.hasNextLine()){
             height = Double.parseDouble(myStaticReader.nextLine().trim().replaceAll("\\s+", ""));
