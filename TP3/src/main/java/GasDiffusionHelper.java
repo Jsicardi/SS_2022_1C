@@ -8,7 +8,6 @@ import static java.lang.System.exit;
 public abstract class GasDiffusionHelper {
     private static FileWriter positionsFileWriter;
     private static FileWriter fpFileWriter;
-    private static double lastTime = 0;
 
     private GasDiffusionHelper() {
     }
@@ -89,7 +88,7 @@ public abstract class GasDiffusionHelper {
 
         StringBuilder builder;
 
-        positionsFileWriter.write(String.format("%.2f\n\n", lastTime + time));
+        positionsFileWriter.write(String.format("%.2f\n\n", time));
         for(Particle particle: particles){
             builder = new StringBuilder();
             builder.append(particle.getId()).append("\t").append(particle.getX()).append("\t").append(particle.getY()).append("\t").append(particle.getVx()).append("\t").append(particle.getVy()).append("\t");
@@ -97,9 +96,8 @@ public abstract class GasDiffusionHelper {
             positionsFileWriter.write(builder.toString());
         }
 
-        fpFileWriter.write(String.format("%.2f\t%g\t%g\n",lastTime + time,fp, 1-fp));
+        fpFileWriter.write(String.format("%.2f\t%g\t%g\n",time,fp, 1-fp));
 
-        lastTime += time;
     }
 
     public static void closeFiles() throws IOException {
