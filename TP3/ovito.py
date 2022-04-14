@@ -22,8 +22,8 @@ def generate_wall(w,h, width_of_hole):
 
         for y in range(0, h):
             x1 = 0; #left wall
-            x3 = w/2 #center wall
             x2 = w; #right wall
+            x3 = w/2 #center wall
             #separated by tabs
             string+=(str(id) + "\t" +str(x1/1000) + "\t" + str(y/1000) + "\n")
             id+=1
@@ -32,7 +32,7 @@ def generate_wall(w,h, width_of_hole):
             #only write wall if it is not in the hole, hole is centered vertically
 
             if y < ((h/2) - width_of_hole/2) or y > ((h/2) + width_of_hole/2):
-                string+=(str(id) + "\t" + str(x3/100) + "\t" + str(y/100) + "\n")
+                string+=(str(id) + "\t" + str(x3/1000) + "\t" + str(y/1000) + "\n")
                 id+=1
 
         wall.write(str(id))
