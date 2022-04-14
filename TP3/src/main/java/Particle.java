@@ -36,6 +36,8 @@ public class Particle {
                 ", mass=" + mass +
                 ", x=" + x +
                 ", y=" + y +
+                ", vx=" + vx +
+                ", vy=" + vy +
                 '}';
     }
 
