@@ -269,7 +269,7 @@ public class GasDiffusionMethod {
         double sigma = p1.getRadius() + p2.getRadius();
         double deltaVdeltaR =deltaVx*deltaX + deltaVy*deltaY;
 
-        double J = (2*(p1.getMass()*p2.getMass())*deltaVdeltaR) / sigma * (p1.getMass() + p2.getMass());
+        double J = (2 * (p1.getMass() * p2.getMass()) * deltaVdeltaR) / (sigma * (p1.getMass() + p2.getMass()));
 
         double Jx = (J *deltaX) / sigma;
         double Jy = (J *deltaY) / sigma;
