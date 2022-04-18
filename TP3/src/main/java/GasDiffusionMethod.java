@@ -51,7 +51,7 @@ public class GasDiffusionMethod {
             particleFraction = moveParticles(currentCollision.getTime()-currentTime);
 
             // Save system state
-            GasDiffusionHelper.addOutputStep(particles,currentCollision.getTime(),currentCollision.getParticle1Index()-1, currentCollision.getParticle2Index()-1);
+            GasDiffusionHelper.addOutputStep(particles,currentCollision.getTime(),currentCollision.getParticle1Index(), currentCollision.getParticle2Index());
 
             // Resolve collision
             resolveCollision(currentCollision);

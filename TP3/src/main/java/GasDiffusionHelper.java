@@ -80,16 +80,16 @@ public abstract class GasDiffusionHelper {
 
     }
 
-    public static void addOutputStep(List<Particle> particles,double time, int particle1Id, int particle2Id) throws IOException {
+    public static void addOutputStep(List<Particle> particles,double time, int particle1Index, int particle2Index) throws IOException {
 
         StringBuilder builder;
 
         positionsFileWriter.write(String.format("%.2f\n", time));
 
-        if(particle2Id < 0) //collision with wall
-            positionsFileWriter.write(String.format("%s\t%d\n\n", WALL_COLLISION,particle1Id));
+        if(particle2Index < 0) //collision with wall
+            positionsFileWriter.write(String.format("%s\t%d\n\n", WALL_COLLISION,particle1Index+1));
         else
-            positionsFileWriter.write(String.format("%s\t%d\t%d\n\n", PARTICLE_COLLISION,particle1Id,particle2Id));
+            positionsFileWriter.write(String.format("%s\t%d\t%d\n\n", PARTICLE_COLLISION,particle1Index+1,particle2Index+1));
 
         for(Particle particle: particles){
             builder = new StringBuilder();
