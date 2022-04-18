@@ -7,6 +7,8 @@ import static java.lang.System.exit;
 
 public abstract class GasDiffusionHelper {
     private static FileWriter positionsFileWriter;
+    private final static String WALL_COLLISION = "WC";
+    private final static String PARTICLE_COLLISION = "PC";
 
     private GasDiffusionHelper() {
     }
@@ -78,11 +80,17 @@ public abstract class GasDiffusionHelper {
 
     }
 
-    public static void addOutputStep(List<Particle> particles,double time) throws IOException {
+    public static void addOutputStep(List<Particle> particles,double time, int particle1Id, int particle2Id) throws IOException {
 
         StringBuilder builder;
 
-        positionsFileWriter.write(String.format("%.2f\n\n", time));
+        positionsFileWriter.write(String.format("%.2f\n", time));
+
+        if(particle2Id < 0) //collision with wall
+            positionsFileWriter.write(String.format("%s\t%d\n\n", WALL_COLLISION,particle1Id));
+        else
+            positionsFileWriter.write(String.format("%s\t%d\t%d\n\n", PARTICLE_COLLISION,particle1Id,particle2Id));
+
         for(Particle particle: particles){
             builder = new StringBuilder();
             builder.append(particle.getId()).append("\t").append(particle.getX()).append("\t").append(particle.getY()).append("\t").append(particle.getVx()).append("\t").append(particle.getVy()).append("\t");
