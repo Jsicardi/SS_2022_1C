@@ -7,7 +7,6 @@ import static java.lang.System.exit;
 
 public abstract class GasDiffusionHelper {
     private static FileWriter positionsFileWriter;
-    private static FileWriter fpFileWriter;
 
     private GasDiffusionHelper() {
     }
@@ -72,19 +71,14 @@ public abstract class GasDiffusionHelper {
     }
 
 
-    public static void createOutputFiles(String positionsFile, String fpFile) throws IOException {
+    public static void createOutputFiles(String positionsFile) throws IOException {
         File positionsOutput = new File(positionsFile);
         positionsOutput.createNewFile();
         positionsFileWriter = new FileWriter(positionsFile);
 
-        File fpOutput= new File(fpFile);
-        fpOutput.createNewFile();
-        fpFileWriter = new FileWriter(fpFile);
-        fpFileWriter.write("Time\tFpA\tFpB\n");
-
     }
 
-    public static void addOutputStep(List<Particle> particles,double time, double fp) throws IOException {
+    public static void addOutputStep(List<Particle> particles,double time) throws IOException {
 
         StringBuilder builder;
 
@@ -96,12 +90,9 @@ public abstract class GasDiffusionHelper {
             positionsFileWriter.write(builder.toString());
         }
 
-        fpFileWriter.write(String.format("%.2f\t%g\t%g\n",time,fp, 1-fp));
-
     }
 
     public static void closeFiles() throws IOException {
         positionsFileWriter.close();
-        fpFileWriter.close();
     }
 }

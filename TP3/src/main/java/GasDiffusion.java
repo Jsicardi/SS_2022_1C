@@ -9,7 +9,7 @@ public class GasDiffusion {
     public static void main(String[] args) throws IOException {
         long startTime = System.currentTimeMillis();
 
-        if(args.length != 6){
+        if(args.length != 5){
             throw new IllegalArgumentException("Invalid parameters");
         }
 
@@ -17,14 +17,13 @@ public class GasDiffusion {
         Scanner myStaticReader = new Scanner(staticFile);
         File dynamicFile = new File(args[1]);
         Scanner myDynamicReader = new Scanner(dynamicFile);
-        String positionsPath = args[2];
-        String fpPath = args[3];
+        String positionsPath = args[2];;
 
         int N = 0;
         double width = 0;
         double height = 0;
-        double openingLength = Double.parseDouble(args[4]);
-        double epsilon = Double.parseDouble(args[5]);
+        double openingLength = Double.parseDouble(args[3]);
+        double epsilon = Double.parseDouble(args[4]);
 
         //parse the quantity of particles(N) and the size of the grid(width*height)
         if(myStaticReader.hasNextLine()){
@@ -47,7 +46,7 @@ public class GasDiffusion {
 
         GasDiffusionMethod method = new GasDiffusionMethod(height,width,openingLength,particles,epsilon);
 
-        GasDiffusionHelper.createOutputFiles(positionsPath,fpPath);
+        GasDiffusionHelper.createOutputFiles(positionsPath);
 
         method.executeMethod();
 
