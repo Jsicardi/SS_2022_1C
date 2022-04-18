@@ -93,7 +93,7 @@ public abstract class GasDiffusionHelper {
 
         for(Particle particle: particles){
             builder = new StringBuilder();
-            builder.append(particle.getId()).append("\t").append(particle.getX()).append("\t").append(particle.getY()).append("\t").append(particle.getVx()).append("\t").append(particle.getVy()).append("\t");
+            builder.append(particle.getId()).append("\t").append(particle.getX()).append("\t").append(particle.getY()).append("\t").append(particle.getVx()).append("\t").append(particle.getVy());
             builder.replace(builder.length(), builder.length(), "\n");
             positionsFileWriter.write(builder.toString());
         }

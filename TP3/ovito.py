@@ -51,7 +51,8 @@ generate_wall(240, 90, 20)
 with open('data_ovito.txt', 'w') as f:
     total_particles = int(lines_s[0].replace(" ",""))
     for i in range(0, len(lines_r)):
-        if(i % (total_particles + 2) == 0):
-            f.write(str(total_particles) + "\n")
-        else:
+        tokens = lines_r[i].replace(" ","").replace("\n","").split('\t')
+        if(len(tokens) == 1 and tokens[0] != ""):
+            f.write(str(total_particles) + "\n\n")
+        elif(len(tokens) == 5):
            f.write(lines_r[i])
