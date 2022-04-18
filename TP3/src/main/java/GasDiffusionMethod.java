@@ -17,6 +17,7 @@ public class GasDiffusionMethod {
     private final int DOWN_WALL = -3;
     private final int RIGHT_WALL = -4;
     private final int MIDDLE_WALL = -5;
+    private final int MIDDLE_WALL_BORDER = -6;
 
 
     public GasDiffusionMethod(double height, double width, double openingLength, List<Particle> particles, double stopEpsilon) {
@@ -125,8 +126,14 @@ public class GasDiffusionMethod {
                         collisions.add(new Collision(currentTime + auxTime,p.getId()-1,MIDDLE_WALL));
                     }
                     else{
-                        auxTime = (width - p.getRadius() - p.getX())/p.getVx();
-                        collisions.add(new Collision(currentTime + auxTime,p.getId()-1,RIGHT_WALL));
+                        // Check collision against border of opening
+                        if ((auxY < (height/2 + openingLength/2) && auxY > (height/2 + openingLength/2 - p.getRadius())) || (auxY > (height/2 - openingLength/2) && auxY < (height/2 - openingLength/2 + p.getRadius()))){
+                            collisions.add(new Collision(currentTime + auxTime,p.getId()-1,MIDDLE_WALL_BORDER));
+                        }
+                        else {
+                            auxTime = (width - p.getRadius() - p.getX())/p.getVx();
+                            collisions.add(new Collision(currentTime + auxTime,p.getId()-1,RIGHT_WALL));
+                        }
                     }
                 } else {
                     auxTime = (width - p.getRadius() - p.getX())/p.getVx();
@@ -140,8 +147,14 @@ public class GasDiffusionMethod {
                         collisions.add(new Collision(currentTime + auxTime,p.getId()-1,MIDDLE_WALL));
                     }
                     else{
-                        auxTime = (p.getRadius() - p.getX())/p.getVx();
-                        collisions.add(new Collision(currentTime + auxTime,p.getId()-1,LEFT_WALL));
+                        // Check collision against border of opening
+                        if ((auxY < (height/2 + openingLength/2) && auxY > (height/2 + openingLength/2 - p.getRadius())) || (auxY > (height/2 - openingLength/2) && auxY < (height/2 - openingLength/2 + p.getRadius()))){
+                            collisions.add(new Collision(currentTime + auxTime,p.getId()-1,MIDDLE_WALL_BORDER));
+                        }
+                        else {
+                            auxTime = (p.getRadius() - p.getX()) / p.getVx();
+                            collisions.add(new Collision(currentTime + auxTime, p.getId() - 1, LEFT_WALL));
+                        }
                     }
                 } else {
                     auxTime = (p.getRadius() - p.getX())/p.getVx();
@@ -252,6 +265,9 @@ public class GasDiffusionMethod {
                 vy = particles.get(collision.getParticle1Index()).getVy();
                 particles.get(collision.getParticle1Index()).setVy(-vy);
                 break;
+            case MIDDLE_WALL_BORDER:
+                resolveCollisionWithBorder(collision);
+                break;
             default:
                 resolveCollisionWithParticles(collision);
         }
@@ -279,5 +295,22 @@ public class GasDiffusionMethod {
         particles.get(collision.getParticle2Index()).setVx(p2.getVx() - (Jx/p2.getMass()));
         particles.get(collision.getParticle2Index()).setVy(p2.getVy() - (Jy/p2.getMass()));
 
+    }
+
+
+    private void resolveCollisionWithBorder(Collision collision){
+        Particle p = particles.get(collision.getParticle1Index());
+
+        double angle = Math.atan2(-p.getVy(), -p.getVx());  // - because angle is from obstacle towards particle
+        double angleCos = Math.cos(angle);
+        double angleSen = Math.sin(angle);
+        double[][] collisionOp = {{-angleCos*angleCos + angleSen*angleSen, -2*angleSen*angleCos},
+                {-2*angleSen*angleCos, -angleSen*angleSen + angleCos*angleCos}};
+
+        double newVx = collisionOp[0][0] * p.getVx() + collisionOp[0][1] * p.getVy();
+        double newVy = collisionOp[1][0] * p.getVx() + collisionOp[1][1] * p.getVy();
+
+        p.setVx(newVx);
+        p.setVy(newVy);
     }
 }
