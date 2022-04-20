@@ -21,10 +21,6 @@ public class Particle {
         this.id = id;
         this.radius = radius;
         this.mass = mass;
-        this.x = x;
-        this.y = y;
-        this.vx = vx;
-        this.vy = vy;
     }
 
 
@@ -83,13 +79,6 @@ public class Particle {
 
     public void setVx(double vx) {
         this.vx = vx;
-    }
-
-    public double getDistance(Particle particle){
-        double deltaX = Math.abs(x-particle.getX());
-        double deltaY = Math.abs(y-particle.getY());
-
-        return Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY,2)) - radius - particle.getRadius();
     }
 
 }

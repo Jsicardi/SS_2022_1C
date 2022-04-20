@@ -48,7 +48,6 @@ public abstract class GasDiffusionHelper {
         List<Double> particleProperties = new ArrayList<>();
         int id_counter = 1;
 
-        String aux_token;
         while (reader.hasNextLine()) {
             particleProperties.clear();
             String data = reader.nextLine().trim().replaceAll("\\s+", " ");;
