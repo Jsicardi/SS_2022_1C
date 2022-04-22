@@ -41,8 +41,6 @@ def generate_wall(w,h, width_of_hole):
 
 static = open(sys.argv[1])
 results = open(sys.argv[2])
-delta_t = float(sys.argv[3])
-t_max = 0
 
 lines_s = static.readlines()
 lines_r = results.readlines()
@@ -51,16 +49,9 @@ generate_wall(240, 90, 20)
 
 with open('data_ovito.txt', 'w') as f:
     total_particles = int(lines_s[0].replace(" ",""))
-    i = 0
-    while i < len(lines_r):
+    for i in range(0, len(lines_r)):
         tokens = lines_r[i].replace(" ","").replace("\n","").split('\t')
         if(len(tokens) == 1 and tokens[0] != ""):
-            if(float(tokens[0]) < t_max):
-                i+=total_particles+3
-                continue
-            print(tokens[0])
             f.write(str(total_particles) + "\n\n")
-            t_max+=delta_t
         elif(len(tokens) == 5):
            f.write(lines_r[i])
-        i+=1
