@@ -1,7 +1,5 @@
 ##nro_de_evento,tiempo,fpleft,fp right
 
-from cv2 import ROTATE_90_COUNTERCLOCKWISE
-
 
 static_file = open('static_rand.txt')
 static_lines = static_file.readlines()
@@ -11,7 +9,7 @@ static_file.close()
 
 results_file = open('result.txt')
 results_lines = results_file.readlines()
-fp_csv = open("fp_n_20_1.csv", "w")
+fp_csv = open("fp_d_0.01_8.csv", "w")
 fp_csv.write("event_number,time,fp_left,fp_right\n")
 
 i = 0
