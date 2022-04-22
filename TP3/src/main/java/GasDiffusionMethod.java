@@ -37,7 +37,9 @@ public class GasDiffusionMethod {
         List<Particle> currentParticles = new ArrayList<>(particles);
         Collision currentCollision;
         PriorityQueue<Collision> newCollisions;
-        while (particleFraction > 0.5 + stopEpsilon || particleFraction < 0.5 - stopEpsilon) {
+        boolean eqFrac = false;
+        double eqTime = 0;
+        while (!eqFrac || (currentTime < eqTime*2)) {
 
             // Calculate time of collisions
             analyzeCollisions(currentParticles);
@@ -78,6 +80,11 @@ public class GasDiffusionMethod {
             }
 
             currentTime += (currentCollision.getTime() - currentTime);
+
+            if(!eqFrac && particleFraction <= 0.5 + stopEpsilon && particleFraction >= 0.5 - stopEpsilon){
+                eqFrac = true;
+                eqTime = currentTime;
+            }
 
         }
 

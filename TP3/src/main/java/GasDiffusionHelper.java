@@ -83,7 +83,7 @@ public abstract class GasDiffusionHelper {
 
         StringBuilder builder;
 
-        positionsFileWriter.write(String.format("%.2f\n", time));
+        positionsFileWriter.write(String.format("%g\n", time));
 
         if(particle2Index < 0) //collision with wall
             positionsFileWriter.write(String.format("%s\t%d\t%d\n\n", WALL_COLLISION,particle1Index+1,particle2Index));
