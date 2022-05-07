@@ -36,9 +36,11 @@ public abstract class Algorithms {
     }
 
     public static void gearPredictorCorrectDerivatives(double[] oldDer, double[] newDer, double[] alphas, double deltaR2, double deltaT){
+        int factorial = 1;
         for (int i = 0; i < 6; i++) {
-            oldDer[i] = newDer[i] + (alphas[i] * deltaR2 * LongStream.rangeClosed(1, i)
-                    .reduce(1, (long x, long y) -> x * y))/ Math.pow(deltaT, i);
+            oldDer[i] = newDer[i] + (alphas[i] * deltaR2 * factorial)/ Math.pow(deltaT, i);
+            factorial *= (i+1);
         }
     }
+
 }

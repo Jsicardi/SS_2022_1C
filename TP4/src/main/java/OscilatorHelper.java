@@ -34,7 +34,7 @@ public class OscilatorHelper {
     }
 
     public void executeBeeman() throws IOException {
-        double t = 0;
+        double t = 0, auxT;
         double x;
         double vPredicted;
         double vCorrected;
@@ -48,7 +48,8 @@ public class OscilatorHelper {
 
         while(t <= finalT){
             if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
-                generateOutput(p,t);
+                auxT = round(t,4);
+                generateOutput(p,auxT);
             }
 
             //calculate x
@@ -65,7 +66,6 @@ public class OscilatorHelper {
             p.setVx(vCorrected);
             p.setX(x);
             t+=deltaT;
-            t = round(t,2);
         }
         writer.close();
     }
@@ -74,7 +74,7 @@ public class OscilatorHelper {
 
         double[] alphas = {3.0/16, 251.0/360, 1, 11.0/18, 1.0/6, 1.0/60};
         double deltaA, deltaR2;
-        double t = 0;
+        double t = 0, auxT;
         derivatives[0][2] = getA(getForce(derivatives[0][0],derivatives[0][1]));
         derivatives[0][3] = getR3(derivatives[0][1],derivatives[0][2]);
         derivatives[0][4] = getR4(derivatives[0][2],derivatives[0][3]);
@@ -82,7 +82,9 @@ public class OscilatorHelper {
 
         while(t <= finalT){
             if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
-                generateOutput(p,t);
+                auxT = round(t,4);
+
+                generateOutput(p,auxT);
             }
 
             //1.predict derivatives
@@ -100,7 +102,6 @@ public class OscilatorHelper {
             p.setX(derivatives[0][0]);
 
             t += deltaT;
-            t = round(t,2);
         }
         writer.close();
     }
@@ -115,10 +116,11 @@ public class OscilatorHelper {
 
 
     private double getForce(double x, double v){
-        return - k*x - gamma*v;
+        return -k*x - gamma*v;
     }
     private double getR3(double r1, double r2) {
         return (-k*r1 - gamma*r2)/m;
+
     }
     private double getR4(double r2, double r3){
         return (-k*r2 - gamma*r3)/m;
