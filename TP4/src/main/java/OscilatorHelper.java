@@ -51,6 +51,7 @@ public class OscilatorHelper {
             if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
                 generateOutput(p,t);
             }
+
             //calculate x
             x = Algorithms.beemanX(p.getX(), p.getVx(), getA(getForce(p.getX(), p.getVx())),aPrev,t,deltaT);
 

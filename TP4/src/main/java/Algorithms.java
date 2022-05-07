@@ -5,7 +5,7 @@ public abstract class Algorithms {
     }
 
     public static double beemanX(double x, double v, double a, double aPrev, double t, double deltaT){
-        return x + v + (double)2/3*a*Math.pow(deltaT, 2)-(double)1/6*aPrev*Math.pow(deltaT, 2);
+        return x + v * deltaT + (double)2/3*a*Math.pow(deltaT, 2)-(double)1/6*aPrev*Math.pow(deltaT, 2);
     }
 
     public static double beemanPredictionV(double v, double a, double aPrev, double deltaT){
