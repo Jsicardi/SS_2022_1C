@@ -15,7 +15,7 @@ public class Oscilator {
         double deltaT2 = Double.parseDouble(args[2]);
         String method = args[3];
 
-        OscilatorHelper helper = new OscilatorHelper(new Particle(1,0,50,0,70), deltaT1,deltaT2,path);
+        OscilatorHelper helper = new OscilatorHelper(new Particle(1,0,-(100.0 / 140),0,70), deltaT1,deltaT2,path,method);
 
         switch (method){
             case "Beeman":

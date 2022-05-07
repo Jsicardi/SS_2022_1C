@@ -6,6 +6,8 @@ import java.math.RoundingMode;
 
 public class OscilatorHelper {
 
+    private final static double EPSILON = 0.00001;
+
     private final double k = 10000;
     private double m = 70;
     private final double A = 1;
@@ -44,9 +46,10 @@ public class OscilatorHelper {
         aPrev = getA(getForce(prevX, prevV));
 
         while(t <= finalT){
-            if(t % savingT == 0){
+            if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
                 generateOutput(p,t);
             }
+
             //calculate x
             x = Algorithms.beemanX(p.getX(), p.getVx(), getA(getForce(p.getX(), p.getVx())),aPrev,t,deltaT);
 
