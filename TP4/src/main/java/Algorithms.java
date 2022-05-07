@@ -26,6 +26,14 @@ public abstract class Algorithms {
         return v + deltaT * f / m;
     }
 
+    public static double verletX(double x, double xPrev,double f, double mass, double deltaT){
+        return (2 * x) - xPrev + ((Math.pow(deltaT,2)) * (f/mass));
+    }
+
+    public static double verletV(double xNext, double xPrev, double deltaT){
+        return (xNext - xPrev) / (2 * deltaT);
+    }
+
     public static void gearPredictorPredictDerivatives(double[] oldDer, double[] newDer, double deltaT){
         newDer[5] = oldDer[5];
         newDer[4] = oldDer[4] +oldDer[5] * deltaT;

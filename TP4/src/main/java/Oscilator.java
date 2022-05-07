@@ -21,6 +21,9 @@ public class Oscilator {
             case "Beeman":
                 helper.executeBeeman();
                 break;
+            case "Verlet":
+                helper.executeVerlet();
+                break;
             case "Gear":
                 helper.executeGear();
                 break;

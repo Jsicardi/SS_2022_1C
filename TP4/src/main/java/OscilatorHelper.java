@@ -33,6 +33,39 @@ public class OscilatorHelper {
         this.savingT = savingT;
     }
 
+    public void executeVerlet() throws IOException {
+        double t = 0;
+        double x = 0;
+        double v = 0;
+        double xPrev = Algorithms.eulerX(derivatives[0][0], derivatives[0][1], deltaT);
+
+        while(t <= finalT){
+            System.out.printf("Current x: %g Prev x: %g V: %g F: %g\n",p.getX(), xPrev, p.getVx(),getForce(p.getX(),p.getVx()));
+            x = Algorithms.verletX(p.getX(), xPrev,getForce(p.getX(),p.getVx()),p.getMass(),deltaT);
+            System.out.println(x);
+
+            if(t != 0){
+                v = Algorithms.verletV(x, xPrev, deltaT);
+                p.setVx(v);
+            }
+
+            if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
+                if(t != 0) {
+                    generateOutput(p, t);
+                }
+                else {
+                    generateOutput(p, t);
+                }
+            }
+            xPrev = p.getX();
+            p.setX(x);
+
+            t+=deltaT;
+            t = round(t,2);
+        }
+        writer.close();
+    }
+
     public void executeBeeman() throws IOException {
         double t = 0;
         double x;
