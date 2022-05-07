@@ -9,16 +9,16 @@ public class OscilatorHelper {
     private final static double EPSILON = 0.00001;
 
     private final double k = 10000;
-    private double m = 70;
+    private final double m;
+
     private final double A = 1;
     private final double gamma = 100;
     private final double finalT = 5;
-    private double deltaT;
-    private double savingT;
+    private final double deltaT;
+    private final double savingT;
     private Particle p;
     private double[][] derivatives = new double[2][6];
-    private double aPrev;   // For correcting v in beeman
-    private FileWriter writer;
+    private final FileWriter writer;
 
 
     public OscilatorHelper(Particle particle,double deltaT,double savingT,String path) throws IOException {
@@ -35,15 +35,16 @@ public class OscilatorHelper {
 
     public void executeBeeman() throws IOException {
         double t = 0;
-        double x = 0;
-        double vPredicted = 0;
-        double vCorrected = 0;
-        double aNext = 0;
+        double x;
+        double vPredicted;
+        double vCorrected;
+        double aNext;
 
         // Initialize aPrev
         double prevX = Algorithms.eulerX(derivatives[0][0], derivatives[0][1], deltaT);
         double prevV = Algorithms.eulerV(derivatives[0][1], getForce(derivatives[0][0], derivatives[0][1]), m, deltaT);
-        aPrev = getA(getForce(prevX, prevV));
+        // For correcting v in beeman
+        double aPrev = getA(getForce(prevX, prevV));
 
         while(t <= finalT){
             if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
@@ -51,7 +52,7 @@ public class OscilatorHelper {
             }
 
             //calculate x
-            x = Algorithms.beemanX(p.getX(), p.getVx(), getA(getForce(p.getX(), p.getVx())),aPrev,t,deltaT);
+            x = Algorithms.beemanX(p.getX(), p.getVx(), getA(getForce(p.getX(), p.getVx())), aPrev,t,deltaT);
 
             //calculate v
             vPredicted = Algorithms.beemanPredictionV(p.getVx(),getA(getForce(x,p.getVx())), aPrev,deltaT);
@@ -70,7 +71,9 @@ public class OscilatorHelper {
     }
 
     public void executeGear() throws IOException {
-        int step = 0;
+
+        double[] alphas = {3.0/16, 251.0/360, 1, 11.0/18, 1.0/6, 1.0/60};
+        double deltaA, deltaR2;
         double t = 0;
         derivatives[0][2] = getA(getForce(derivatives[0][0],derivatives[0][1]));
         derivatives[0][3] = getR3(derivatives[0][1],derivatives[0][2]);
@@ -78,15 +81,24 @@ public class OscilatorHelper {
         derivatives[0][5] = getR5(derivatives[0][3],derivatives[0][4]);
 
         while(t <= finalT){
-            if(t % savingT == 0){
+            if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
                 generateOutput(p,t);
             }
-            //1.predict derivatives
-            Algorithms.gearPredictorPredictDerivatives(derivatives[step%2], derivatives[(step+1)%2],deltaT);
-            //2.evaluate
 
-            //3. correct variables
-            step ++;
+            //1.predict derivatives
+            Algorithms.gearPredictorPredictDerivatives(derivatives[0], derivatives[1],deltaT);
+
+            //2.evaluate
+            deltaA = getA(getForce(derivatives[1][0], derivatives[1][1])) - derivatives[1][2];
+            deltaR2 = deltaA * Math.pow(deltaT,2) / 2;
+
+            //3. correct variable
+            Algorithms.gearPredictorCorrectDerivatives(derivatives[0], derivatives[1], alphas, deltaR2, deltaT);
+
+            //4. update particle
+            p.setVx(derivatives[0][1]);
+            p.setX(derivatives[0][0]);
+
             t += deltaT;
             t = round(t,2);
         }
@@ -121,11 +133,10 @@ public class OscilatorHelper {
     }
 
     private void generateOutput(Particle p, double t) throws IOException {
-        StringBuilder builder = new StringBuilder();
-        builder.append(t).append("\n");
-        builder.append(p.getX()).append("\t");
-        builder.append(p.getVx()).append("\t\n");
-        writer.write(builder.toString());
+        String toWrite = t + "\n" +
+                p.getX() + "\t" +
+                p.getVx() + "\t\n";
+        writer.write(toWrite);
     }
 
 

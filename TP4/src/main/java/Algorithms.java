@@ -1,3 +1,5 @@
+import java.util.stream.LongStream;
+
 public abstract class Algorithms {
 
     private Algorithms(){
@@ -25,10 +27,18 @@ public abstract class Algorithms {
     }
 
     public static void gearPredictorPredictDerivatives(double[] oldDer, double[] newDer, double deltaT){
+        newDer[5] = oldDer[5];
         newDer[4] = oldDer[4] +oldDer[5] * deltaT;
         newDer[3] = oldDer[3] +oldDer[4] * deltaT + oldDer[5] * Math.pow(deltaT, 2) / 2;
         newDer[2] = oldDer[2] +oldDer[3] * deltaT + oldDer[4] * Math.pow(deltaT, 2) / 2 + oldDer[5] * Math.pow(deltaT, 3) / 6;
         newDer[1] = oldDer[1] +oldDer[2] * deltaT + oldDer[3] * Math.pow(deltaT, 2) / 2 + oldDer[4] * Math.pow(deltaT, 3) / 6 + oldDer[5] * Math.pow(deltaT, 4) / 24;
         newDer[0] = oldDer[0] +oldDer[1] * deltaT + oldDer[2] * Math.pow(deltaT, 2) / 2 + oldDer[3] * Math.pow(deltaT, 3) / 6 + oldDer[4] * Math.pow(deltaT, 4) / 24 + oldDer[5] * Math.pow(deltaT, 5) / 120;
+    }
+
+    public static void gearPredictorCorrectDerivatives(double[] oldDer, double[] newDer, double[] alphas, double deltaR2, double deltaT){
+        for (int i = 0; i < 6; i++) {
+            oldDer[i] = newDer[i] + (alphas[i] * deltaR2 * LongStream.rangeClosed(1, i)
+                    .reduce(1, (long x, long y) -> x * y))/ Math.pow(deltaT, i);
+        }
     }
 }
