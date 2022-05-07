@@ -23,4 +23,12 @@ public abstract class Algorithms {
     public static double eulerV(double v, double f, double m, double deltaT){
         return v + deltaT * f / m;
     }
+
+    public static void gearPredictorPredictDerivatives(double[] oldDer, double[] newDer, double deltaT){
+        newDer[4] = oldDer[4] +oldDer[5] * deltaT;
+        newDer[3] = oldDer[3] +oldDer[4] * deltaT + oldDer[5] * Math.pow(deltaT, 2) / 2;
+        newDer[2] = oldDer[2] +oldDer[3] * deltaT + oldDer[4] * Math.pow(deltaT, 2) / 2 + oldDer[5] * Math.pow(deltaT, 3) / 6;
+        newDer[1] = oldDer[1] +oldDer[2] * deltaT + oldDer[3] * Math.pow(deltaT, 2) / 2 + oldDer[4] * Math.pow(deltaT, 3) / 6 + oldDer[5] * Math.pow(deltaT, 4) / 24;
+        newDer[0] = oldDer[0] +oldDer[1] * deltaT + oldDer[2] * Math.pow(deltaT, 2) / 2 + oldDer[3] * Math.pow(deltaT, 3) / 6 + oldDer[4] * Math.pow(deltaT, 4) / 24 + oldDer[5] * Math.pow(deltaT, 5) / 120;
+    }
 }

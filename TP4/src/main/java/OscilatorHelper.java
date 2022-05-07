@@ -13,22 +13,20 @@ public class OscilatorHelper {
     private final double finalT = 5;
     private double deltaT;
     private double savingT;
-    private String method;
     private Particle p;
-    private double[] lastR = new double[6];
+    private double[][] derivatives = new double[2][6];
     private double aPrev;   // For correcting v in beeman
     private FileWriter writer;
 
 
-    public OscilatorHelper(Particle particle,double deltaT,double savingT,String path, String method) throws IOException {
+    public OscilatorHelper(Particle particle,double deltaT,double savingT,String path) throws IOException {
         this.p = particle;
         this.m = p.getMass();
-        lastR[0] = p.getX();
-        lastR[1] = p.getVx();
+        derivatives[0][0] = p.getX();
+        derivatives[0][1] = p.getVx();
         File file = new File(path);
         file.createNewFile();
         this.writer = new FileWriter(path);
-        this.method = method;
         this.deltaT = deltaT;
         this.savingT = savingT;
     }
@@ -41,8 +39,8 @@ public class OscilatorHelper {
         double aNext = 0;
 
         // Initialize aPrev
-        double prevX = Algorithms.eulerX(lastR[0], lastR[1], deltaT);
-        double prevV = Algorithms.eulerV(lastR[1], getForce(lastR[0], lastR[1]), m, deltaT);
+        double prevX = Algorithms.eulerX(derivatives[0][0], derivatives[0][1], deltaT);
+        double prevV = Algorithms.eulerV(derivatives[0][1], getForce(derivatives[0][0], derivatives[0][1]), m, deltaT);
         aPrev = getA(getForce(prevX, prevV));
 
         while(t <= finalT){
@@ -68,6 +66,30 @@ public class OscilatorHelper {
         writer.close();
     }
 
+    public void executeGear() throws IOException {
+        int step = 0;
+        double t = 0;
+        derivatives[0][2] = getA(getForce(derivatives[0][0],derivatives[0][1]));
+        derivatives[0][3] = getR3(derivatives[0][1],derivatives[0][2]);
+        derivatives[0][4] = getR4(derivatives[0][2],derivatives[0][3]);
+        derivatives[0][5] = getR5(derivatives[0][3],derivatives[0][4]);
+
+        while(t <= finalT){
+            if(t % savingT == 0){
+                generateOutput(p,t);
+            }
+            //1.predict derivatives
+            Algorithms.gearPredictorPredictDerivatives(derivatives[step%2], derivatives[(step+1)%2],deltaT);
+            //2.evaluate
+
+            //3. correct variables
+            step ++;
+            t += deltaT;
+            t = round(t,2);
+        }
+        writer.close();
+    }
+
     private static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -79,6 +101,15 @@ public class OscilatorHelper {
 
     private double getForce(double x, double v){
         return - k*x - gamma*v;
+    }
+    private double getR3(double r1, double r2) {
+        return (-k*r1 - gamma*r2)/m;
+    }
+    private double getR4(double r2, double r3){
+        return (-k*r2 - gamma*r3)/m;
+    }
+    private double getR5(double r3, double r4){
+        return (-k*r3 - gamma*r4)/m;
     }
 
 
@@ -93,4 +124,6 @@ public class OscilatorHelper {
         builder.append(p.getVx()).append("\t\n");
         writer.write(builder.toString());
     }
+
+
 }

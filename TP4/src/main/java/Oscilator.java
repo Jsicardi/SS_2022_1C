@@ -15,11 +15,14 @@ public class Oscilator {
         double deltaT2 = Double.parseDouble(args[2]);
         String method = args[3];
 
-        OscilatorHelper helper = new OscilatorHelper(new Particle(1,0,50,0,70), deltaT1,deltaT2,path,method);
+        OscilatorHelper helper = new OscilatorHelper(new Particle(1,0,50,0,70), deltaT1,deltaT2,path);
 
         switch (method){
             case "Beeman":
                 helper.executeBeeman();
+                break;
+            case "Gear":
+                helper.executeGear();
         }
 
         long endTime = System.currentTimeMillis();
