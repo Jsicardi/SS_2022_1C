@@ -33,6 +33,38 @@ public class OscilatorHelper {
         this.savingT = savingT;
     }
 
+    public void executeVerlet() throws IOException {
+        double t = 0;
+        double x = 0;
+        double v = 0;
+        double xPrev = Algorithms.eulerX(derivatives[0][0], derivatives[0][1], -deltaT, getForce(derivatives[0][0], derivatives[0][1]),p.getMass());
+
+        while(t <= finalT){
+            x = Algorithms.verletX(p.getX(), xPrev,getForce(p.getX(),p.getVx()),p.getMass(),deltaT);
+            System.out.println(x);
+
+            if(t != 0){
+                v = Algorithms.verletV(x, xPrev, deltaT);
+                p.setVx(v);
+            }
+
+            if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
+                if(t != 0) {
+                    generateOutput(p, t);
+                }
+                else {
+                    generateOutput(p, t);
+                }
+            }
+            xPrev = p.getX();
+            p.setX(x);
+
+            t+=deltaT;
+            t = round(t,2);
+        }
+        writer.close();
+    }
+
     public void executeBeeman() throws IOException {
         double t = 0, auxT;
         double x;
@@ -41,8 +73,8 @@ public class OscilatorHelper {
         double aNext;
 
         // Initialize aPrev
-        double prevX = Algorithms.eulerX(derivatives[0][0], derivatives[0][1], deltaT);
-        double prevV = Algorithms.eulerV(derivatives[0][1], getForce(derivatives[0][0], derivatives[0][1]), m, deltaT);
+        double prevX = Algorithms.eulerX(derivatives[0][0], derivatives[0][1], -deltaT,getForce(derivatives[0][0], derivatives[0][1]),p.getMass() );
+        double prevV = Algorithms.eulerV(derivatives[0][1], getForce(derivatives[0][0], derivatives[0][1]), m, -deltaT);
         // For correcting v in beeman
         double aPrev = getA(getForce(prevX, prevV));
 

@@ -18,12 +18,20 @@ public abstract class Algorithms {
         return v + (double)1/3 * aNext * deltaT + (double)5/6 * a * deltaT - (double)1/6 * aPrev* deltaT;
     }
 
-    public static double eulerX(double x, double v, double deltaT){
-        return x + v * deltaT;
+    public static double eulerX(double x, double v, double deltaT, double f, double mass){
+        return x + v * deltaT + (Math.pow(deltaT,2) * (f/(2*mass)));
     }
 
     public static double eulerV(double v, double f, double m, double deltaT){
         return v + deltaT * f / m;
+    }
+
+    public static double verletX(double x, double xPrev,double f, double mass, double deltaT){
+        return (2 * x) - xPrev + ((Math.pow(deltaT,2)) * (f/mass));
+    }
+
+    public static double verletV(double xNext, double xPrev, double deltaT){
+        return (xNext - xPrev) / (2 * deltaT);
     }
 
     public static void gearPredictorPredictDerivatives(double[] oldDer, double[] newDer, double deltaT){
