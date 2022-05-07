@@ -37,10 +37,9 @@ public class OscilatorHelper {
         double t = 0;
         double x = 0;
         double v = 0;
-        double xPrev = Algorithms.eulerX(derivatives[0][0], derivatives[0][1], deltaT);
+        double xPrev = Algorithms.eulerX(derivatives[0][0], derivatives[0][1], -deltaT, getForce(derivatives[0][0], derivatives[0][1]),p.getMass());
 
         while(t <= finalT){
-            System.out.printf("Current x: %g Prev x: %g V: %g F: %g\n",p.getX(), xPrev, p.getVx(),getForce(p.getX(),p.getVx()));
             x = Algorithms.verletX(p.getX(), xPrev,getForce(p.getX(),p.getVx()),p.getMass(),deltaT);
             System.out.println(x);
 
@@ -74,8 +73,8 @@ public class OscilatorHelper {
         double aNext;
 
         // Initialize aPrev
-        double prevX = Algorithms.eulerX(derivatives[0][0], derivatives[0][1], deltaT);
-        double prevV = Algorithms.eulerV(derivatives[0][1], getForce(derivatives[0][0], derivatives[0][1]), m, deltaT);
+        double prevX = Algorithms.eulerX(derivatives[0][0], derivatives[0][1], -deltaT,getForce(derivatives[0][0], derivatives[0][1]),p.getMass() );
+        double prevV = Algorithms.eulerV(derivatives[0][1], getForce(derivatives[0][0], derivatives[0][1]), m, -deltaT);
         // For correcting v in beeman
         double aPrev = getA(getForce(prevX, prevV));
 
