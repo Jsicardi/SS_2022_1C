@@ -38,10 +38,10 @@ public class OscilatorHelper {
         double x = 0;
         double v = 0;
         double xPrev = Algorithms.eulerX(derivatives[0][0], derivatives[0][1], -deltaT, getForce(derivatives[0][0], derivatives[0][1]),p.getMass());
+        double auxT = 0;
 
         while(t <= finalT){
             x = Algorithms.verletX(p.getX(), xPrev,getForce(p.getX(),p.getVx()),p.getMass(),deltaT);
-            System.out.println(x);
 
             if(t != 0){
                 v = Algorithms.verletV(x, xPrev, deltaT);
@@ -50,17 +50,18 @@ public class OscilatorHelper {
 
             if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
                 if(t != 0) {
-                    generateOutput(p, t);
+                    auxT = round(t,4);
+                    generateOutput(p, auxT);
                 }
                 else {
-                    generateOutput(p, t);
+                    auxT = round(t,4);
+                    generateOutput(p, auxT);
                 }
             }
             xPrev = p.getX();
             p.setX(x);
 
             t+=deltaT;
-            t = round(t,2);
         }
         writer.close();
     }
