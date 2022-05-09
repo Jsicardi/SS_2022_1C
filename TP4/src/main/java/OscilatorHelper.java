@@ -40,7 +40,7 @@ public class OscilatorHelper {
         double xPrev = Algorithms.eulerX(derivatives[0][0], derivatives[0][1], -deltaT, getForce(derivatives[0][0], derivatives[0][1]),p.getMass());
         double auxT = 0;
 
-        while(t <= finalT){
+        while(t <= finalT + EPSILON){
             x = Algorithms.verletX(p.getX(), xPrev,getForce(p.getX(),p.getVx()),p.getMass(),deltaT);
 
             if(t != 0){
@@ -49,14 +49,8 @@ public class OscilatorHelper {
             }
 
             if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
-                if(t != 0) {
-                    auxT = round(t,4);
-                    generateOutput(p, auxT);
-                }
-                else {
-                    auxT = round(t,4);
-                    generateOutput(p, auxT);
-                }
+                auxT = round(t,4);
+                generateOutput(p, auxT);
             }
             xPrev = p.getX();
             p.setX(x);
@@ -79,7 +73,7 @@ public class OscilatorHelper {
         // For correcting v in beeman
         double aPrev = getA(getForce(prevX, prevV));
 
-        while(t <= finalT){
+        while(t <= finalT + EPSILON){
             if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
                 auxT = round(t,4);
                 generateOutput(p,auxT);
@@ -113,7 +107,7 @@ public class OscilatorHelper {
         derivatives[0][4] = getR4(derivatives[0][2],derivatives[0][3]);
         derivatives[0][5] = getR5(derivatives[0][3],derivatives[0][4]);
 
-        while(t <= finalT){
+        while(t <= finalT + EPSILON){
             if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
                 auxT = round(t,4);
 
@@ -170,7 +164,7 @@ public class OscilatorHelper {
     private void generateOutput(Particle p, double t) throws IOException {
         String toWrite = t + "\n" +
                 p.getX() + "\t" +
-                p.getVx() + "\t\n";
+                p.getVx() + "\n";
         writer.write(toWrite);
     }
 
