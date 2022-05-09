@@ -6,7 +6,7 @@ import java.math.RoundingMode;
 
 public class OscilatorHelper {
 
-    private final static double EPSILON = 0.00001;
+    private final static double EPSILON = 0.0000000001;
 
     private final double k = 10000;
     private final double m;
@@ -49,7 +49,7 @@ public class OscilatorHelper {
             }
 
             if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
-                auxT = round(t,4);
+                auxT = round(t,6);
                 generateOutput(p, auxT);
             }
             xPrev = p.getX();
@@ -75,7 +75,7 @@ public class OscilatorHelper {
 
         while(t <= finalT + EPSILON){
             if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
-                auxT = round(t,4);
+                auxT = round(t,6);
                 generateOutput(p,auxT);
             }
 
@@ -109,7 +109,7 @@ public class OscilatorHelper {
 
         while(t <= finalT + EPSILON){
             if(t % savingT < EPSILON || t % savingT > savingT - EPSILON){
-                auxT = round(t,4);
+                auxT = round(t,6);
 
                 generateOutput(p,auxT);
             }
