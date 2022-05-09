@@ -4,6 +4,7 @@ public class Particle {
     private double vx;
     private double vy;
     private final double mass;
+    private double charge;
 
     public Particle(double x,double y, double vx, double vy, double mass){
         this.x = x;
@@ -11,6 +12,15 @@ public class Particle {
         this.vx = vx;
         this.vy = vy;
         this.mass = mass;
+    }
+
+    public Particle(double x,double y, double vx, double vy, double mass, double charge){
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = vy;
+        this.mass = mass;
+        this.charge = charge;
     }
 
     public double getMass() {
@@ -31,6 +41,10 @@ public class Particle {
 
     public double getY() {
         return y;
+    }
+
+    public double getCharge() {
+        return charge;
     }
 
     public void setVx(double vx) {

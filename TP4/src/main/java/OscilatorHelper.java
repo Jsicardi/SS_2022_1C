@@ -16,8 +16,8 @@ public class OscilatorHelper {
     private final double finalT = 5;
     private final double deltaT;
     private final double savingT;
-    private Particle p;
-    private double[][] derivatives = new double[2][6];
+    private final Particle p;
+    private final double[][] derivatives = new double[2][6];
     private final FileWriter writer;
 
 
