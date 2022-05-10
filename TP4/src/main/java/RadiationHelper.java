@@ -14,7 +14,7 @@ public class RadiationHelper {
     private final double m = Math.pow(10, -27);
     private final double d = Math.pow(10, -8);
     private final double n = Math.pow(16, 2);
-    private final static double EPSILON = 0.0000000001;
+    private final static double EPSILON = 1e-20;
 
     // Specific parameters for exercise
     private double t = 0;
@@ -77,7 +77,7 @@ public class RadiationHelper {
         double auxT;
         while (!cutCondition()) {
             if(t % savingT < EPSILON || t % savingT > savingT - EPSILON) {
-                auxT = round(t,6);
+                auxT = round(t,25);
                 generateOutput(particle, auxT);
             }
 
@@ -119,7 +119,7 @@ public class RadiationHelper {
         for (int i = 0; i < n; i++) {
             y = i / (int) Math.sqrt(n);
             x = (i % (int) Math.sqrt(n)) + 1;
-            positive = y%2 == 0 ?  (i%2)*2-1 :  ((i+1)%2)*2-1;
+            positive = (y%2 == 0 ?  (i%2)*2-1 :  ((i+1)%2)*2-1);
             particles.add(new Particle(x * d, y * d, 0, 0, m, positive * q));
         }
     }
@@ -157,28 +157,11 @@ public class RadiationHelper {
         return forces;
     }
 
-
-    /*
-    private double getPotEnergy(Particle p1, Particle p2) {
-        double dist = getDistBetweenPoints(p1.getX(), p1.getY(), p2.getX(), p2.getY());
-        return k * p1.getCharge() * p2.getCharge() / dist;
-    }
-
-
-    private double getAllPotEnergy() {
-        double sum = 0;
-        for (Particle p2 : particles) {
-            sum += getPotEnergy(particle, p2);
-        }
-        return sum;
-    }
-    */
-
     private boolean cutCondition() {
         double x = particle.getX();
         double y = particle.getY();
         double dist = l + 2 * d;
-        if (x < 0 || x > dist || y < 0-d || y > dist) {
+        if (x < 0 || x > dist || y < -d || y > dist-d) {
             System.out.println("x: " + x + " y: " + y);
             System.out.println("x < 0:" + (x < 0) + " x > dist:" + (x > dist) + " y < 0:" + (y < 0) + " y > dist:" + (y > dist));
             System.out.println("Se va del recinto");
