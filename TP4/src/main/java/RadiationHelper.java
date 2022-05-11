@@ -87,7 +87,6 @@ public class RadiationHelper {
 
             //2.evaluate
             forces = getAllEleForce();
-            System.out.println("Forces: " + forces[0] + " " + forces[1]);
             deltaAX = getA(forces[0]) - derivativesX[1][2];
             deltaR2X = deltaAX * Math.pow(deltaT,2) / 2;
             deltaAY = getA(forces[1]) - derivativesY[1][2];
@@ -98,14 +97,10 @@ public class RadiationHelper {
             Algorithms.gearPredictorCorrectDerivatives(derivativesY[0], derivativesY[1], alphas, deltaR2Y, deltaT);
 
             //4. update particle
-            System.out.println("Old x: " + particle.getX() + " Old y: " + particle.getY());
-            System.out.println("Old vx: " + particle.getVx() + " Old vy: " + particle.getVy());
             particle.setVx(derivativesX[0][1]);
             particle.setX(derivativesX[0][0]);
             particle.setVy(derivativesY[0][1]);
             particle.setY(derivativesY[0][0]);
-            System.out.println("New x: " + particle.getX() + " New y: " + particle.getY());
-            System.out.println("New vx: " + particle.getVx() + " New vy: " + particle.getVy());
 
             t += deltaT;
         }
