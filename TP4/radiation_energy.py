@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-path_format = "result_v"
+path_format = "result_d"
 deltas = [1e-14,5e-15,1e-15,5e-16,1e-16,5e-17,1e-17]
 saving_t = 1e-14
 path_result = "rad_energy.csv"
@@ -39,7 +39,6 @@ def getAllPotEnergy(p:Particle, particles):
             pos += 1
         else:
             neg += 1
-    #print("pos: {0} neg: {1}".format(pos,neg))
     return sum
 
 
@@ -73,7 +72,7 @@ def __main__():
                 file = open("{0}{1}_{2}.txt".format(path_format,j,i+1))
                 lines = file.readlines()
                 tokens_initial = lines[1].replace("\n", "").split("\t")
-                tokens_final = lines[-1].replace("\n", "").split("\t")
+                tokens_final = lines[-2].replace("\n", "").split("\t")
 
                 #save initial and final values of particles
                 initial_particle:Particle = Particle(float(tokens_initial[0]), float(tokens_initial[1]),float(tokens_initial[2]),float(tokens_initial[3]),q)
