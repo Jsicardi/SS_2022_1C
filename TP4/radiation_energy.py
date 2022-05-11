@@ -53,9 +53,9 @@ def generateMatrix():
         y = int(i / int(math.sqrt(n)))
         x = int((i % int(math.sqrt(n))) + 1)
         if y%2 == 0:
-            positive =  (i%2) * 2 - 1
+            positive =  ((i+1)%2) * 2 - 1
         else:
-            positive = ((i+1)%2) * 2 - 1
+            positive = (i%2) * 2 - 1
         particles.append(Particle(x * d, y * d, 0, 0, positive * q))
 
     return particles
@@ -95,4 +95,4 @@ def __main__():
                 
                 
 if __name__ == "__main__":
-    __main__()
+   __main__()

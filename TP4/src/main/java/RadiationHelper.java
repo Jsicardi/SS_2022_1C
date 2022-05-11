@@ -121,7 +121,7 @@ public class RadiationHelper {
         for (int i = 0; i < n; i++) {
             y = i / (int) Math.sqrt(n);
             x = (i % (int) Math.sqrt(n)) + 1;
-            positive = (y%2 == 0 ?  (i%2)*2-1 :  ((i+1)%2)*2-1);
+            positive = y%2 == 0 ?  ((i+1)%2)*2-1 :  (i%2)*2-1;
             particles.add(new Particle(x * d, y * d, 0, 0, m, positive * q));
         }
     }
