@@ -14,7 +14,13 @@ public class RadiationHelper {
     private final double m = Math.pow(10, -27);
     private final double d = Math.pow(10, -8);
     private final double n = Math.pow(16, 2);
-    private final static double EPSILON = 1e-20;
+    private final double EPSILON = 1e-20;
+    private final int LEFT_CONDITION = 1;
+    private final int RIGHT_CONDITION = 2;
+    private final int UP_CONDITION = 3;
+    private final int DOWN_CONDITION = 4;
+    private final int ABSORBED_CONDITION = 5;
+
 
     // Specific parameters for exercise
     private double t = 0;
@@ -75,7 +81,7 @@ public class RadiationHelper {
     private void execute() throws IOException {
         double[] forces;
         double auxT;
-        while (!cutCondition()) {
+        while (cutCondition() == 0) {
             if(t % savingT < EPSILON || t % savingT > savingT - EPSILON) {
                 auxT = round(t,25);
                 generateOutput(particle, auxT);
@@ -104,6 +110,7 @@ public class RadiationHelper {
 
             t += deltaT;
         }
+        writer.write(String.format("%d\n", cutCondition()));
     }
 
 
@@ -152,23 +159,28 @@ public class RadiationHelper {
         return forces;
     }
 
-    private boolean cutCondition() {
+    private int cutCondition() {
         double x = particle.getX();
         double y = particle.getY();
         double dist = l + 2 * d;
-        if (x < 0 || x > dist || y < -d || y > dist-d) {
-            System.out.println("x: " + x + " y: " + y);
-            System.out.println("x < 0:" + (x < 0) + " x > dist:" + (x > dist) + " y < 0:" + (y < 0) + " y > dist:" + (y > dist));
-            System.out.println("Se va del recinto");
-            return true;
+        if(x < 0){
+            return LEFT_CONDITION;
+        }
+        if(x > dist){
+            return RIGHT_CONDITION;
+        }
+        if(y < -d){
+            return DOWN_CONDITION;
+        }
+        if(y > dist-d){
+            return UP_CONDITION;
         }
         for (Particle otherParticle: particles) {
            if (getDistBetweenPoints(otherParticle.getX(), otherParticle.getY(), particle.getX(),  particle.getY()) < 0.01 * d) {
-               System.out.println("Absorbida por partícula");
-               return true;
+               return ABSORBED_CONDITION;
            }
         }
-        return false;
+        return 0;
     }
 
     private void generateOutput(Particle p, double t) throws IOException {
