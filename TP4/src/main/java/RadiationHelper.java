@@ -131,8 +131,8 @@ public class RadiationHelper {
     private double getDistBetweenPoints(double x1, double y1, double x2, double y2) {
         double ac = Math.abs(y2 - y1);
         double cb = Math.abs(x2 - x1);
-
-        return Math.hypot(ac, cb);
+        
+        return Math.sqrt(Math.pow(ac,2) + Math.pow(cb,2));
     }
 
 
