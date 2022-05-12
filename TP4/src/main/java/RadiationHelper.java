@@ -131,7 +131,7 @@ public class RadiationHelper {
     private double getDistBetweenPoints(double x1, double y1, double x2, double y2) {
         double ac = Math.abs(y2 - y1);
         double cb = Math.abs(x2 - x1);
-        
+
         return Math.sqrt(Math.pow(ac,2) + Math.pow(cb,2));
     }
 
@@ -162,23 +162,23 @@ public class RadiationHelper {
     private int cutCondition() {
         double x = particle.getX();
         double y = particle.getY();
-        double dist = l + 2 * d;
+        double dist = l + d;
+        for (Particle otherParticle: particles) {
+            if (getDistBetweenPoints(otherParticle.getX(), otherParticle.getY(), particle.getX(),  particle.getY()) < 0.01 * d) {
+                return ABSORBED_CONDITION;
+            }
+        }
         if(x < 0){
             return LEFT_CONDITION;
         }
         if(x > dist){
             return RIGHT_CONDITION;
         }
-        if(y < -d){
+        if(y < 0){
             return DOWN_CONDITION;
         }
-        if(y > dist-d){
+        if(y > dist){
             return UP_CONDITION;
-        }
-        for (Particle otherParticle: particles) {
-           if (getDistBetweenPoints(otherParticle.getX(), otherParticle.getY(), particle.getX(),  particle.getY()) < 0.01 * d) {
-               return ABSORBED_CONDITION;
-           }
         }
         return 0;
     }
