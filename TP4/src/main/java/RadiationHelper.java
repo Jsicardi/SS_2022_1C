@@ -44,12 +44,13 @@ public class RadiationHelper {
         this.deltaT = deltaT;
         this.savingT = savingT;
 
-        this.l = Math.sqrt(n) * d - d;
+        this.l = (Math.sqrt(n) * d) - d;
 
         if (randomY0) {
             Random r = new Random();
             y0 = -d + (d - -d) * r.nextDouble();
         }
+
         this.particle = new Particle(0,y0 + l/2, v0, 0, m, q);
 
         generateMatrix();
@@ -141,11 +142,10 @@ public class RadiationHelper {
 
 
     private void addEleForce(double[] forces, Particle p1, Particle p2) {
-        double angle = Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX());
         double dist = getDistBetweenPoints(p1.getX(), p1.getY(), p2.getX(), p2.getY());
-        double force =  k * p1.getCharge() * p2.getCharge() / Math.pow(dist, 2);
-        double forceX = force * Math.cos(angle);
-        double forceY = force * Math.sin(angle);
+        double force =  (k * p1.getCharge() * p2.getCharge()) / Math.pow(dist, 2);
+        double forceX = force * ((p1.getX() - p2.getX()) / dist) ;
+        double forceY = force * ((p1.getY() - p2.getY()) / dist);
         forces[0] += forceX;
         forces[1] += forceY;
     }

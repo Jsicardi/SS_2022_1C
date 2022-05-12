@@ -11,7 +11,6 @@ q = math.pow(10, -19)
 k = math.pow(10, 10)
 m = math.pow(10, -27)
 
-
 class Particle:
     def __init__(self,x,y,vx,vy,q):
         self.type = type
@@ -21,12 +20,9 @@ class Particle:
         self.vy = vy
         self.q = q
 
-
 def getPotEnergy(p1:Particle, p2:Particle):
     dist = math.dist([p1.x, p1.y], [p2.x, p2.y])
     return k * p1.q * p2.q / dist
-
-
 
 def getAllPotEnergy(p:Particle, particles):
     sum = 0
@@ -41,11 +37,9 @@ def getAllPotEnergy(p:Particle, particles):
             neg += 1
     return sum
 
-
 def getKinEnergy(p:Particle):
     return 0.5 * m * ((p.vx**2) + (p.vy**2))
     
-
 def generateMatrix():
     positive = True
     particles = []
@@ -60,12 +54,11 @@ def generateMatrix():
 
     return particles
 
-
 def __main__():
     particles = generateMatrix()
     
     with open(path_result, "w") as f:
-        f.write("Delta_t, Avg_rel_dif, Std\n")
+        f.write("Delta_t,Avg_rel_dif,Std\n")
         for i in range(len(deltas)):
             relative_difs = []
             for j in range(1,6):
@@ -83,8 +76,10 @@ def __main__():
                 final_k = getKinEnergy(final_particle)
                 initial_u = getAllPotEnergy(initial_particle, particles)
                 final_u = getAllPotEnergy(final_particle, particles)
-                print("IK: {0} IU: {1} FI: {2} FU: {3}".format(initial_k,initial_u,final_k,final_u))
-                relative_difs.append((abs((initial_k + initial_u) - (final_k + final_u)) / (initial_k + initial_u)))
+                #print("IK: {0} IU: {1} FK: {2} FU: {3}".format(initial_k,initial_u,final_k,final_u))
+                energy_init = (initial_k + initial_u)
+                energy_dif = abs(energy_init - (final_k + final_u))
+                relative_difs.append(energy_dif / energy_init)
 
             avg_relative_dif = 0
             for relative_dif in relative_difs:
@@ -92,7 +87,6 @@ def __main__():
             avg_relative_dif /= 5
             stdev = np.std(relative_difs)
             f.write("{0},{1},{2}\n".format(deltas[i],avg_relative_dif,stdev))
-                
-                
+                                
 if __name__ == "__main__":
    __main__()
