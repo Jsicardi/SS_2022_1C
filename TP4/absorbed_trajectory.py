@@ -2,7 +2,7 @@ import math,numpy as np
 path_format = "result_v"
 path_result = "absorbed_trajectory.csv"
 
-files = 9
+files = 201
 velocities = [5000,16250,27500,38750,50000]
 
 def __main__():
@@ -36,9 +36,6 @@ def __main__():
                 trajectories.append(distance)
             for trajectory in trajectories:
                 f.write("{0},{1}\n".format(velocities[i], trajectory))
-
-                
-                
-                
+       
 if __name__ == "__main__":
     __main__()

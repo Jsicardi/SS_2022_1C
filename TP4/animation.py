@@ -3,7 +3,6 @@ from radiation_energy import Particle, generateMatrix, n, d, q, k, m
 import math
 import sys
 
-
 def generate_animation_matrix():
     particles = generateMatrix()
     matrix_file = open("matrix.txt", "w")
@@ -37,10 +36,7 @@ def generate_animation_particle():
 
     particle_file.close()
     results.close()
-
-
-
-    
+  
 
 if __name__ == "__main__":
     generate_animation_matrix()

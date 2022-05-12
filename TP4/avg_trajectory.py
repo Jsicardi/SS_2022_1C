@@ -2,7 +2,7 @@ import math,numpy as np
 path_format = "result_v"
 path_result = "avg_trajectory.csv"
 
-files = 9
+files = 201
 velocities = [5000,16250,27500,38750,50000]
 
 def __main__():

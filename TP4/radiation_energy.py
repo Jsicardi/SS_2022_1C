@@ -2,8 +2,8 @@ import math
 import numpy as np
 
 path_format = "result_d"
-deltas = [1e-14,5e-15,1e-15,5e-16,1e-16,5e-17,1e-17]
-saving_t = 1e-14
+deltas = [1e-15,5e-16,1e-16,5e-17,1e-17,5e-18,1e-18]
+saving_t = 1e-15
 path_result = "rad_energy.csv"
 n = 16*16
 d = math.pow(10, -8)

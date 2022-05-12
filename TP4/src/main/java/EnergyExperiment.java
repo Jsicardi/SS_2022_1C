@@ -3,8 +3,8 @@ import java.io.IOException;
 public class EnergyExperiment {
 
     public static void main(String[] args) throws IOException {
-        double[] deltas = {1e-14,5e-15,1e-15,5e-16,1e-16,5e-17,1e-17};
-        double savingT = 1e-14;
+        double[] deltas = {1e-15,5e-16,1e-16,5e-17,1e-17,5e-18,1e-18};
+        double savingT = 1e-15;
         double[] y0 = {-1e-8,-5e-9,0,5e-9,1e-8};
         int maxVelocity = 50000;
         String[] mainArgs;

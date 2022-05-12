@@ -7,9 +7,9 @@ public class TrajectoryExperiment {
         double dt = 1e-16;
         double savingT = 1e-14;
         double y0 = -1e-8;
-        double dy = 2.5e-9;
+        double dy = 1e-10;
         String[] mainArgs;
-        double epsilon = 1e-10;
+        double epsilon = 1e-14;
 
         String fileFormat = "result_v";
         int count;
