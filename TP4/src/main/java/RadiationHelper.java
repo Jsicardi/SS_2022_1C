@@ -162,22 +162,24 @@ public class RadiationHelper {
     private int cutCondition() {
         double x = particle.getX();
         double y = particle.getY();
-        double dist = l + d;
+        double dist = l + 2 * d;
+        
         for (Particle otherParticle: particles) {
             if (getDistBetweenPoints(otherParticle.getX(), otherParticle.getY(), particle.getX(),  particle.getY()) < 0.01 * d) {
                 return ABSORBED_CONDITION;
             }
         }
+
         if(x < 0){
             return LEFT_CONDITION;
         }
         if(x > dist){
             return RIGHT_CONDITION;
         }
-        if(y < 0){
+        if(y < -d){
             return DOWN_CONDITION;
         }
-        if(y > dist){
+        if(y > dist-d){
             return UP_CONDITION;
         }
         return 0;
