@@ -31,6 +31,8 @@ hs_err_pid*
 *.txt
 *.ovito
 *.avi
+*.csv
+*.mp4
 
 #TP4
 *.csv
