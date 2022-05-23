@@ -69,8 +69,8 @@ public class CPM {
         checkZombieBite();
 
         // Iterate: find contacts, adjust radii and calculate new targets and velocities
-        checkHumansContacts();
-        checkZombiesContacts();
+        humansCalculations();
+        zombiesCalculations();
 
         // Iterate: move particles
         moveParticles();
@@ -90,19 +90,58 @@ public class CPM {
     }
     */
 
+    private void humansCalculations(){
+        // Check contacts with other humans and walls
+        // TODO map<particle, particle> will not work for walls
+        // TODO this only works for one contact, what if more than 1 particle is in contact at the same time? How probable is that? Make Map<Particle, List<Particle>>?
+        Map<Particle, Particle> contacts = getHumansContacts();
+
+        for (Particle human : humans) {
+            // Update radii based on if human is in contact with something
+            if (contacts.containsKey(human))
+                human.setR(rMin);
+            else
+                human.setR(human.getR() + (rMax / (TAU / deltaT)));
+
+            // Give new target based on contacts and closest zombie position
+
+            // Calculate new velocity based on new target
+
+        }
+    }
+
+    private void zombiesCalculations(){
+        // TODO map<particle, particle> will not work for walls
+        // TODO this only works for one contact, what if more than 1 particle is in contact at the same time? How probable is that? Make Map<Particle, List<Particle>>?
+        Map<Particle, Particle> contacts = getZombiesContacts();
+
+        for (Particle zombie : zombies) {
+            // Update radii based on if human is in contact with something
+            if (contacts.containsKey(zombie))
+                zombie.setR(rMin);
+            else
+                zombie.setR(zombie.getR() + (rMax / (TAU / deltaT)));
+
+            // Give new target based on contacts and closest human position
+
+            // Calculate new velocity based on new target
+
+        }
+    }
+
+    private Map<Particle, Particle> getHumansContacts(){
+        return null;
+    }
+
+    private Map<Particle, Particle> getZombiesContacts(){
+        return null;
+    }
+
     private void giveHumansTargets(){
 
     }
 
     private void giveZombiesTargets(){
-
-    }
-
-    private void checkHumansContacts(){
-
-    }
-
-    private void checkZombiesContacts(){
 
     }
 
