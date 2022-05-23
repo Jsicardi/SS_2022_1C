@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Locale;
 
 import static java.lang.System.exit;
 
@@ -25,9 +26,9 @@ public class ParticleGenerator {
         FileWriter staticWriter = new FileWriter("static_rand.txt");
         FileWriter dynamicWriter = new FileWriter("dynamic_rand.txt");
 
-        staticWriter.write(String.format("%d\n%g\n", Nh, rmax));
+        staticWriter.write(String.format(Locale.US,"%d\n%g\n%g\n", Nh,rmax,R));
         for(int i = 0; i <= Nh; i++){
-            staticWriter.write(String.format("%d\t%g\n", i, rmin));
+            staticWriter.write(String.format(Locale.US,"%d\t%g\n", i, rmin));
         }
         staticWriter.close();
 
@@ -35,7 +36,7 @@ public class ParticleGenerator {
         double zombieAngle = Math.toRadians(Math.random() * 360);
         double zombieVx = vzi * Math.cos(zombieAngle);
         double zombieVy = vzi * Math.sin(zombieAngle);
-        dynamicWriter.write(String.format("0\t0\t0\t%g\t%g\n",zombieVx,zombieVy));
+        dynamicWriter.write(String.format(Locale.US,"0\t0\t0\t%g\t%g\n",zombieVx,zombieVy));
 
         double humanX = 0;
         double humanY = 0;
@@ -49,7 +50,7 @@ public class ParticleGenerator {
                 humanY = Math.random() * R;
                 distance = Math.pow(humanX+rmin, 2) + Math.pow(humanY+rmin, 2);
             }
-            dynamicWriter.write(String.format("%d\t%g\t%g\t0\t0\n",i,humanX,humanY));
+            dynamicWriter.write(String.format(Locale.US,"%d\t%g\t%g\t0\t0\n",i,humanX,humanY));
         }
         dynamicWriter.close();
     }

@@ -20,12 +20,12 @@ public class CPM {
     private final double transformationTime;
     private final List<Particle> zombies;
     private final List<Particle> humans;
-    private final Queue<TransformingAction> tranformingActions;
+    private final Queue<TransformingAction> transformingActions;
     private double t = 0;
 
 
-    public CPM(double rMin, double rMax,double R, double vdh, double vdz, double Ap, double Bp, double savingT, double cutConditionT, double transformationTime, List<Particle> humans, List<Particle> zombies){
-        this.rMin = rMin;
+    public CPM(double rMax,double R, double vdh, double vdz, double Ap, double Bp, double savingT, double cutConditionT, double transformationTime, List<Particle> humans, List<Particle> zombies){
+        this.rMin = zombies.get(0).getR();
         this.rMax = rMax;
         this.R = R;
         this.vdh = vdh;
@@ -33,14 +33,14 @@ public class CPM {
         this.vdz = vdz;
         this.vzi = Math.sqrt(Math.pow(zombies.get(0).getVx(), 2) + Math.pow(zombies.get(0).getVy(), 2));
         this.savingT = savingT;
+        this.transformationTime = transformationTime;
+        this.cutConditionT = cutConditionT;
         this.Ap = Ap;
         this.Bp = Bp;
         this.zombies = zombies;
         this.humans = humans;
         this.deltaT = this.rMin / 2*(this.vdh);
-        this.tranformingActions = new LinkedList<>();
-        this.transformationTime = transformationTime;
-        this.cutConditionT = cutConditionT;
+        this.transformingActions = new LinkedList<>();
     }
 
 
@@ -149,7 +149,7 @@ public class CPM {
     private void checkTransformationsEnd(){
         boolean stop = false;
         while (!stop){
-            TransformingAction closest = tranformingActions.peek();
+            TransformingAction closest = transformingActions.peek();
             if (closest != null && closest.getTimestamp() > t - EPSILON){
                 // Transformation done
                 zombies.add(closest.getZombie());
@@ -158,7 +158,7 @@ public class CPM {
                 // human.speed = vzi
                 // human.speedDirection = random
                 zombies.add(human);
-                tranformingActions.remove();
+                transformingActions.remove();
             } else
                 stop = true;
         }

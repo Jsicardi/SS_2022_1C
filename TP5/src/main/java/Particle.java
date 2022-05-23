@@ -5,12 +5,12 @@ public class Particle {
     private double vy;
     private double r;
 
-    public Particle(double x, double y,double vx, double vy) {
+    public Particle(double x, double y,double vx, double vy, double r) {
         this.x = x;
         this.y = y;
         this.vx = vx;
         this.vy = vy;
-        this.r = 0;
+        this.r = r;
     }
 
     public double getVx() {
