@@ -1,13 +1,14 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 import static java.lang.System.exit;
 
 public class ZombieDynamics {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
 
-        if(args.length != 9){
+        if(args.length != 11){
             System.out.println("Invalid arguments quantity");
             exit(-1);
         }
@@ -16,13 +17,15 @@ public class ZombieDynamics {
         Scanner myStaticReader = new Scanner(staticFile);
         File dynamicFile = new File(args[1]);
         Scanner myDynamicReader = new Scanner(dynamicFile);
-        double vdh = Double.parseDouble(args[2]);
-        double vdz = Double.parseDouble(args[3]);
-        double Ap = Double.parseDouble(args[4]);
-        double Bp = Double.parseDouble(args[5]);
-        double savingT = Double.parseDouble(args[6]);
-        double cutCondition = Double.parseDouble(args[7]);
-        double transformationT = Double.parseDouble(args[8]);
+        String outputPath = args[2];
+        double vdh = Double.parseDouble(args[3]);
+        double vdz = Double.parseDouble(args[4]);
+        double Ap = Double.parseDouble(args[5]);
+        double Bp = Double.parseDouble(args[6]);
+        double savingT = Double.parseDouble(args[7]);
+        double cutCondition = Double.parseDouble(args[8]);
+        double transformationT = Double.parseDouble(args[9]);
+        double tf = Double.parseDouble(args[10]);
 
         int Nh = Integer.parseInt(myStaticReader.nextLine());
         double rmax = Double.parseDouble(myStaticReader.nextLine());
@@ -42,9 +45,13 @@ public class ZombieDynamics {
 
         List<Particle> humans = ZombieDynamicsHelper.parseDynamicProperties(myDynamicReader,rads);
 
-        CPM cpmMethod = new CPM(rmax,R,vdh,vdz,Ap,Bp,savingT,cutCondition,transformationT,humans,zombies);
+        ZombieDynamicsHelper.createOutputFile(outputPath);
 
-        //cpmMethod.execute();
+        CPM cpmMethod = new CPM(rmax,R,vdh,vdz,Ap,Bp,savingT,cutCondition,transformationT,tf,humans,zombies);
+
+        cpmMethod.execute();
+
+        ZombieDynamicsHelper.closeFiles();
 
     }
 }

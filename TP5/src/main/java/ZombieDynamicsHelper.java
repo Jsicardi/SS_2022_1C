@@ -1,9 +1,10 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 public abstract class ZombieDynamicsHelper {
+    private static FileWriter fileWriter;
 
     private ZombieDynamicsHelper(){
 
@@ -39,5 +40,33 @@ public abstract class ZombieDynamicsHelper {
             i++;
         }
         return humans;
+    }
+
+    public static void createOutputFile(String path) throws IOException {
+        File output = new File(path);
+        output.createNewFile();
+        fileWriter = new FileWriter(output);
+    }
+
+    public static void addOutputStep(double t, List<Particle> humans, List<Particle> zombies, Queue<TransformingAction> transformingActions) throws IOException {
+        StringBuilder builder;
+
+        fileWriter.write(String.format("%g\n", t));
+
+        for(Particle human : humans){
+            fileWriter.write(String.format("%g\t%g\t%g\t%g\t%s\n", human.getX(), human.getY(), human.getVx(), human.getVy(), "H"));
+        }
+        for(Particle zombie : zombies){
+            fileWriter.write(String.format("%g\t%g\t%g\t%g\t%s\n", zombie.getX(), zombie.getY(), zombie.getVx(), zombie.getVy(), "Z"));
+        }
+        for(TransformingAction transformingAction : transformingActions){
+            fileWriter.write(String.format("%g\t%g\t%g\t%g\t%s\n", transformingAction.getHuman().getX(), transformingAction.getHuman().getY(), transformingAction.getHuman().getVx(), transformingAction.getHuman().getVy(), "T"));
+            fileWriter.write(String.format("%g\t%g\t%g\t%g\t%s\n", transformingAction.getZombie().getX(), transformingAction.getZombie().getY(), transformingAction.getZombie().getVx(), transformingAction.getZombie().getVy(), "Z"));
+        }
+
+    }
+
+    public static void closeFiles() throws IOException {
+        fileWriter.close();
     }
 }
