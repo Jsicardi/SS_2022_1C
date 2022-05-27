@@ -61,7 +61,7 @@ public abstract class ZombieDynamicsHelper {
         }
         for(TransformingAction transformingAction : transformingActions){
             fileWriter.write(String.format("%g\t%g\t%g\t%g\t%s\n", transformingAction.getHuman().getX(), transformingAction.getHuman().getY(), transformingAction.getHuman().getVx(), transformingAction.getHuman().getVy(), "T"));
-            fileWriter.write(String.format("%g\t%g\t%g\t%g\t%s\n", transformingAction.getZombie().getX(), transformingAction.getZombie().getY(), transformingAction.getZombie().getVx(), transformingAction.getZombie().getVy(), "Z"));
+            fileWriter.write(String.format("%g\t%g\t%g\t%g\t%s\n", transformingAction.getZombie().getX(), transformingAction.getZombie().getY(), transformingAction.getZombie().getVx(), transformingAction.getZombie().getVy(), "T"));
         }
 
     }

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class CPM {
+
     private static final double TAU = 0.5;
     private static final double EPSILON = 1e-14;
     private static final double ZOMBIE_VISION_RADIUS = 4;
@@ -29,7 +30,6 @@ public class CPM {
     private final Queue<TransformingAction> transformingActions;
     private double t = 0;
 
-
     public CPM(double rMax,double R, double vdh, double vdz, double Ap, double Bp, double savingT, double cutConditionT, double transformationTime, double tf, List<Particle> humans, List<Particle> zombies){
         this.rMin = zombies.get(0).getR();
         this.rMax = rMax;
@@ -51,7 +51,6 @@ public class CPM {
         this.deltaT = this.rMin / 2*(this.vdh);
         this.transformingActions = new LinkedList<>();
     }
-
 
     public void execute() throws IOException {
 
@@ -193,24 +192,68 @@ public class CPM {
         double x = particle.getX();
         double y = particle.getY();
 
-        ArrayList<Double> closestWall = new ArrayList<>();
-        double closestDistance = Integer.MAX_VALUE;
+        double module = Math.sqrt(Math.pow(particle.getX(),2) + Math.pow(particle.getY(), 2));
+        double closestWallX = (particle.getX() / module) * particle.getR();
+        double closestWallY = (particle.getY() / module) * particle.getR();
 
-        // TODO get closest wall points
-
-        return closestWall;
+        return Arrays.asList(closestWallX,closestWallY);
     }
 
     private Map<Particle, Particle> getHumansContacts(){
-        return null;
+        Map<Particle,Particle> contacts = new HashMap<>();
+        double distance;
+        Particle human1;
+        Particle human2;
+        for(int i=0; i < humans.size(); i++){
+            human1 = humans.get(i);
+            for(int j=i+1; j < humans.size(); j++){
+                human2 = humans.get(j);
+                distance = getDistance(human1.getX(), human1.getY(), human2.getX(), human2.getY(), human1.getR(), human2.getR());
+                if (distance <= human1.getR() + human2.getR()){
+                    contacts.put(human1,human2);
+                    break;
+                }
+            }
+        }
+        return contacts;
     }
 
     private Map<Particle, Particle> getZombiesContacts(){
-        return null;
+        Map<Particle,Particle> contacts = new HashMap<>();
+        double distance;
+        Particle zombie1;
+        Particle zombie2;
+        for(int i=0; i < zombies.size(); i++){
+            zombie1 = zombies.get(i);
+            for(int j=i+1; j < zombies.size(); j++){
+                zombie2 = zombies.get(j);
+                distance = getDistance(zombie1.getX(), zombie1.getY(), zombie2.getX(), zombie2.getY(), zombie1.getR(), zombie2.getR());
+                if (distance <= zombie1.getR() + zombie2.getR()){
+                    contacts.put(zombie1,zombie2);
+                    break;
+                }
+            }
+        }
+        return contacts;
     }
 
     private Map<Particle, List<Double>> getWallContacts(List<Particle> particles){
-        return null;
+        Map<Particle,List<Double>> contacts = new HashMap<>();
+        double distance;
+        double closestWallX;
+        double closestWallY;
+        double module;
+
+        for(Particle p : particles){
+            module = Math.sqrt(Math.pow(p.getX(),2) + Math.pow(p.getY(), 2));
+            closestWallX = (p.getX() / module) * p.getR();
+            closestWallY = (p.getY() / module) * p.getR();
+            distance = getDistance(p.getX(),p.getY(),closestWallX,closestWallY,p.getR(),0);
+            if(distance <= p.getR()){
+                contacts.put(p,Arrays.asList(closestWallX,closestWallY));
+            }
+        }
+        return contacts;
     }
 
     private double[] getEscapeValues(double x1, double y1, double x2, double y2, double r1, double r2, boolean isZombie){
@@ -228,26 +271,30 @@ public class CPM {
 
     }
 
-    // TODO add getEscapeValues
     private void giveHumanTarget(Particle human, Particle closestZombie, Particle closestHuman, List<Double> closestWall){
+        // Check all the possible things to run from and choose using heuristic
+        double hx = human.getX();
+        double hy = human.getY();
+
         // Avoid human
         double[] awayFromHumanDir = {0, 0};
         if (closestHuman != null){
             // Calculate direction of escape from human
+            awayFromHumanDir = getEscapeValues(hx,hy,closestHuman.getX(),closestHuman.getY(), human.getR(), closestHuman.getR(),false);
         }
 
         // Avoid wall
         double[] awayFromWallDir = {0, 0};
         if (closestWall != null){
             // Calculate direction of escape from wall
+            double module = Math.sqrt(Math.pow(human.getX(),2) + Math.pow(human.getY(), 2));
+            double closestWallX = (human.getX() / module) * human.getR();
+            double closestWallY = (human.getY() / module) * human.getR();
+            awayFromWallDir = getEscapeValues(hx,hy,closestWallX,closestWallY,human.getR(),0,false);
         }
 
-        // Check all the possible things to run from and choose using heuristic
-        double hx = human.getX();
-        double hy = human.getY();
-
         // Escape from zombie
-        double[] zombieEscape = getEscapeValues(hx,hy,closestZombie.getX(),closestZombie.getY(), human.getR(), closestZombie.getR(),false);
+        double[] zombieEscape = getEscapeValues(hx,hy,closestZombie.getX(),closestZombie.getY(), human.getR(), closestZombie.getR(),true);
         // Sum and decide on final direction and speed
         double[] finalDirection = {zombieEscape[0] + awayFromHumanDir[0] + awayFromWallDir[0], zombieEscape[1] + awayFromHumanDir[1] + awayFromWallDir[1]};
         double distFinal = Math.sqrt(Math.pow(finalDirection[0], 2) + Math.pow(finalDirection[1], 2));
@@ -257,7 +304,6 @@ public class CPM {
         human.setVy(finalDirection[1] * vdh);
     }
 
-    // TODO add getEscapeValues
     private void giveZombieTarget(Particle zombie, Particle closestHuman, Particle closestZombie, List<Double> closestWall) {
         // Check all the possible things to run from and choose using heuristic
         double zx = zombie.getX();
@@ -281,12 +327,17 @@ public class CPM {
         double[] awayFromZombieDir = {0, 0};
         if (closestZombie != null) {
             // Calculate direction of escape from zombie
+            awayFromZombieDir = getEscapeValues(zx,zy,closestZombie.getX(),closestZombie.getY(), zombie.getR(), closestZombie.getR(),false);
         }
 
         // Avoid wall
         double[] awayFromWallDir = {0, 0};
         if (closestWall != null) {
             // Calculate direction of escape from wall
+            double module = Math.sqrt(Math.pow(zombie.getX(),2) + Math.pow(zombie.getY(), 2));
+            double closestWallX = (zombie.getX() / module) * zombie.getR();
+            double closestWallY = (zombie.getY() / module) * zombie.getR();
+            awayFromWallDir = getEscapeValues(zx,zy,closestWallX,closestWallY,zombie.getR(),0,false);
         }
 
         // Sum and decide on final direction and speed
@@ -303,12 +354,12 @@ public class CPM {
         }
     }
 
-
     private void checkTransformationsEnd(){
         boolean stop = false;
         double zombieAngle;
         double zombieVx;
         double zombieVy;
+
         while (!stop){
             TransformingAction closest = transformingActions.peek();
             if (closest != null && closest.getTimestamp() > t - EPSILON){

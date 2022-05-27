@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Particle {
     private double x;
     private double y;
@@ -51,5 +53,18 @@ public class Particle {
 
     public double getR() {
         return r;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Particle particle = (Particle) o;
+        return Double.compare(particle.x, x) == 0 && Double.compare(particle.y, y) == 0 && Double.compare(particle.vx, vx) == 0 && Double.compare(particle.vy, vy) == 0 && Double.compare(particle.r, r) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, vx, vy, r);
     }
 }
