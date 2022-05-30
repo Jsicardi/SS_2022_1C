@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.util.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CPM {
 
@@ -139,7 +141,7 @@ public class CPM {
                 //System.out.println("Giving new target");
                 // Else, avoid collisions
                 // Give new target and speed based on contacts and closest human position
-                giveZombieTarget(zombie, findClosestHuman(zombie, true), findClosestZombie(zombie, true), findClosestWall(zombie, true));
+                giveZombieTarget(zombie, findClosestHuman(zombie, true));
             }
 
         }
@@ -165,8 +167,12 @@ public class CPM {
         Particle closestZombie = null;
         double closestDistance = Integer.MAX_VALUE;
 
+        List<Particle> allZombies = Stream.concat(zombies.stream(), transformingActions.stream().map(TransformingAction::getZombie)).collect(Collectors.toList());
+        System.out.println("\nFinding closest zombie: " + " zombies: " + allZombies.size());
+
         double dist;
-        for (Particle zombie : zombies){
+        for (Particle zombie : allZombies){
+            System.out.println("Human: " + hx + ", " + hy + " Zombie: " + zombie.getX() + " " + zombie.getY());
             dist = getDistance(hx,hy,zombie.getX(),zombie.getY(),particle.getR(),zombie.getR());
             if (callingZombie){
                 if (dist <= ZOMBIE_VISION_RADIUS && dist < closestDistance && !zombie.equals(particle)){
@@ -174,13 +180,16 @@ public class CPM {
                     closestZombie = zombie;
                 }
             } else {
+                System.out.println("Distance: " + dist + " closestDistance: " + closestDistance);
                 if (dist < closestDistance && !zombie.equals(particle)) {
+                    System.out.println("Asigno");
                     closestDistance = dist;
                     closestZombie = zombie;
                 }
             }
         }
 
+        System.out.println("Closest zombie: " + closestZombie);
         return closestZombie;
     }
 
@@ -342,59 +351,38 @@ public class CPM {
         human.setVy(finalDirection[1] * vdh);
     }
 
-    private void giveZombieTarget(Particle zombie, Particle closestHuman, Particle closestZombie, List<Double> closestWall) {
+    private void giveZombieTarget(Particle zombie, Particle closestHuman) {
         // Check all the possible things to run from and choose using heuristic
         double zx = zombie.getX();
         double zy = zombie.getY();
 
+        System.out.printf("Closest Human: %s Zombie: %s\n", closestHuman, zombie);
+
         // Run towards human
         double[] towardsHumanDir = {0, 0};
-        if (closestHuman != null) {
+        if(closestHuman == null){
+            double angle = Math.atan2(zombie.getVy(), zombie.getVx());
+            zombie.setVx(vzi * Math.cos(angle));
+            zombie.setVy(vzi * Math.sin(angle));
+        }
+        else {
             towardsHumanDir[0] = closestHuman.getX() - zx;
             towardsHumanDir[1] = closestHuman.getY() - zy;    // Direction of pursuit towards human
             double distFromZombie = Math.sqrt(Math.pow(towardsHumanDir[0], 2) + Math.pow(towardsHumanDir[1], 2));
             towardsHumanDir[0] = towardsHumanDir[0] / distFromZombie;
             towardsHumanDir[1] = towardsHumanDir[1] / distFromZombie;
 
-            double ncScalarZombie = Apz * Math.exp(-distFromZombie / Bpz);
-            towardsHumanDir[0] = towardsHumanDir[0] * ncScalarZombie * ZOMBIE_ESCAPE_WEIGHT;
-            towardsHumanDir[1] = towardsHumanDir[1] * ncScalarZombie * ZOMBIE_ESCAPE_WEIGHT;
-        }
-
-        // Avoid zombie
-        double[] awayFromZombieDir = {0, 0};
-        if (closestZombie != null) {
-            // Calculate direction of escape from zombie
-            awayFromZombieDir = getEscapeValues(zx,zy,closestZombie.getX(),closestZombie.getY(), zombie.getR(), closestZombie.getR(),false);
-        }
-
-        // Avoid wall
-        double[] awayFromWallDir = {0, 0};
-        if (closestWall != null) {
-            // Calculate direction of escape from wall
-            double x = zombie.getX();
-            double y = zombie.getY();
-            awayFromWallDir = getEscapeValues(zx,zy,closestWall.get(0),closestWall.get(1),zombie.getR(),0,false);
-        }
-
-        // Sum and decide on final direction and speed
-        //System.out.println("towardsHumanDir: " + towardsHumanDir[0] + " " + towardsHumanDir[1] + " awayFromZombieDir: " + awayFromZombieDir[0] + " " + awayFromZombieDir[1] + " awayFromWallDir: " + awayFromWallDir[0] + " " + awayFromWallDir[1]);
-        double[] finalDirection = {towardsHumanDir[0] + awayFromZombieDir[0] + awayFromWallDir[0], towardsHumanDir[1] + awayFromZombieDir[1] + awayFromWallDir[1]};
-        double distFinal = Math.sqrt(Math.pow(finalDirection[0], 2) + Math.pow(finalDirection[1], 2));
-        finalDirection[0] = finalDirection[0] / distFinal;
-        finalDirection[1] = finalDirection[1] / distFinal;
-        //System.out.println("finalDirection: " + finalDirection[0] + " " + finalDirection[1]);
-        if (closestHuman != null) {
-            zombie.setVx(finalDirection[0] * vdz);
-            zombie.setVy(finalDirection[1] * vdz);
-        } else {
-            zombie.setVx(finalDirection[0] * vzi);
-            zombie.setVy(finalDirection[1] * vzi);
+            System.out.println("finalDirection: " + towardsHumanDir[0] + " " + towardsHumanDir[1]);
+            zombie.setVx(towardsHumanDir[0] * vdz);
+            zombie.setVy(towardsHumanDir[1] * vdz);
         }
     }
 
     private void checkTransformationsEnd(){
         boolean stop = false;
+        double humanAngle;
+        double humanVx;
+        double humanVy;
         double zombieAngle;
         double zombieVx;
         double zombieVy;
@@ -405,11 +393,11 @@ public class CPM {
 
                 // Transformation done
                 Particle human = closest.getHuman();
-                zombieAngle = Math.toRadians(Math.random() * 360);
-                zombieVx = vzi * Math.cos(zombieAngle);
-                zombieVy = vzi * Math.sin(zombieAngle);
-                human.setVx(zombieVx);
-                human.setVy(zombieVy);
+                humanAngle = Math.toRadians(Math.random() * 360);
+                humanVx = vzi * Math.cos(humanAngle);
+                humanVy = vzi * Math.sin(humanAngle);
+                human.setVx(humanVx);
+                human.setVy(humanVy);
                 zombies.add(human);
 
                 zombieAngle = Math.toRadians(Math.random() * 360);

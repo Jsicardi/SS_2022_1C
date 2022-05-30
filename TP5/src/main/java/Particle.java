@@ -67,4 +67,15 @@ public class Particle {
     public int hashCode() {
         return Objects.hash(x, y, vx, vy, r);
     }
+
+    @Override
+    public String toString() {
+        return "Particle{" +
+                "x=" + x +
+                ", y=" + y +
+                ", vx=" + vx +
+                ", vy=" + vy +
+                ", r=" + r +
+                '}';
+    }
 }
