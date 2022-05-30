@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.util.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CPM {
 
@@ -139,7 +141,7 @@ public class CPM {
                 //System.out.println("Giving new target");
                 // Else, avoid collisions
                 // Give new target and speed based on contacts and closest human position
-                giveZombieTarget(zombie, findClosestHuman(zombie, true), findClosestZombie(zombie, true), findClosestWall(zombie, true));
+                giveZombieTarget(zombie, findClosestHuman(zombie, true));
             }
 
         }
@@ -165,8 +167,12 @@ public class CPM {
         Particle closestZombie = null;
         double closestDistance = Integer.MAX_VALUE;
 
+        List<Particle> allZombies = Stream.concat(zombies.stream(), transformingActions.stream().map(TransformingAction::getZombie)).collect(Collectors.toList());
+        System.out.println("\nFinding closest zombie: " + " zombies: " + allZombies.size());
+
         double dist;
-        for (Particle zombie : zombies){
+        for (Particle zombie : allZombies){
+            System.out.println("Human: " + hx + ", " + hy + " Zombie: " + zombie.getX() + " " + zombie.getY());
             dist = getDistance(hx,hy,zombie.getX(),zombie.getY(),particle.getR(),zombie.getR());
             if (callingZombie){
                 if (dist <= ZOMBIE_VISION_RADIUS && dist < closestDistance && !zombie.equals(particle)){
@@ -174,13 +180,16 @@ public class CPM {
                     closestZombie = zombie;
                 }
             } else {
+                System.out.println("Distance: " + dist + " closestDistance: " + closestDistance);
                 if (dist < closestDistance && !zombie.equals(particle)) {
+                    System.out.println("Asigno");
                     closestDistance = dist;
                     closestZombie = zombie;
                 }
             }
         }
 
+        System.out.println("Closest zombie: " + closestZombie);
         return closestZombie;
     }
 
@@ -342,7 +351,7 @@ public class CPM {
         human.setVy(finalDirection[1] * vdh);
     }
 
-    private void giveZombieTarget(Particle zombie, Particle closestHuman, Particle closestZombie, List<Double> closestWall) {
+    private void giveZombieTarget(Particle zombie, Particle closestHuman) {
         // Check all the possible things to run from and choose using heuristic
         double zx = zombie.getX();
         double zy = zombie.getY();
@@ -361,25 +370,9 @@ public class CPM {
             towardsHumanDir[1] = towardsHumanDir[1] * ncScalarZombie * ZOMBIE_ESCAPE_WEIGHT;
         }
 
-        // Avoid zombie
-        double[] awayFromZombieDir = {0, 0};
-        if (closestZombie != null) {
-            // Calculate direction of escape from zombie
-            awayFromZombieDir = getEscapeValues(zx,zy,closestZombie.getX(),closestZombie.getY(), zombie.getR(), closestZombie.getR(),false);
-        }
-
-        // Avoid wall
-        double[] awayFromWallDir = {0, 0};
-        if (closestWall != null) {
-            // Calculate direction of escape from wall
-            double x = zombie.getX();
-            double y = zombie.getY();
-            awayFromWallDir = getEscapeValues(zx,zy,closestWall.get(0),closestWall.get(1),zombie.getR(),0,false);
-        }
-
         // Sum and decide on final direction and speed
         //System.out.println("towardsHumanDir: " + towardsHumanDir[0] + " " + towardsHumanDir[1] + " awayFromZombieDir: " + awayFromZombieDir[0] + " " + awayFromZombieDir[1] + " awayFromWallDir: " + awayFromWallDir[0] + " " + awayFromWallDir[1]);
-        double[] finalDirection = {towardsHumanDir[0] + awayFromZombieDir[0] + awayFromWallDir[0], towardsHumanDir[1] + awayFromZombieDir[1] + awayFromWallDir[1]};
+        double[] finalDirection = {towardsHumanDir[0], towardsHumanDir[1]};
         double distFinal = Math.sqrt(Math.pow(finalDirection[0], 2) + Math.pow(finalDirection[1], 2));
         finalDirection[0] = finalDirection[0] / distFinal;
         finalDirection[1] = finalDirection[1] / distFinal;
