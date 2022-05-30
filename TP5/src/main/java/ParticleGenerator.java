@@ -42,12 +42,12 @@ public class ParticleGenerator {
         double humanY = 0;
         double distance = 0;
         for(int i = 1; i <= Nh+1; i++){
-            humanX = Math.random() * R;
-            humanY = Math.random() * R;
+            humanX = (Math.random() * 2 - 1) * R;
+            humanY = (Math.random() * 2 - 1) * R;
             distance = Math.pow(humanX+rmin, 2) + Math.pow(humanY+rmin, 2);
             while(distance > Math.pow(R-rmin,2) || distance < Math.pow(1+rmin,2)){
-                humanX = Math.random() * R;
-                humanY = Math.random() * R;
+                humanX = (Math.random() * 2 - 1) * R;
+                humanY = (Math.random() * 2 - 1) * R;
                 distance = Math.pow(humanX+rmin, 2) + Math.pow(humanY+rmin, 2);
             }
             dynamicWriter.write(String.format(Locale.US,"%d\t%g\t%g\t0\t0\n",i,humanX,humanY));
