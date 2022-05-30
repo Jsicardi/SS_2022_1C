@@ -6,7 +6,7 @@ import java.math.RoundingMode;
 public class CPM {
 
     private static final double TAU = 0.5;
-    private static final double EPSILON = 1e-14;
+    private static final double EPSILON = 1e-10;
     private static final double ZOMBIE_VISION_RADIUS = 4;
     private static final double ZOMBIE_ESCAPE_WEIGHT = 3;
     private final double rMin;
@@ -46,7 +46,7 @@ public class CPM {
         this.Bpz = Bp*ZOMBIE_ESCAPE_WEIGHT;
         this.zombies = zombies;
         this.humans = humans;
-        this.deltaT = this.rMin / 2*(this.vdh);
+        this.deltaT = this.rMin / (2*(this.vdh));
         this.transformingActions = new LinkedList<>();
     }
 
@@ -76,6 +76,9 @@ public class CPM {
 
             // Iterate: move particles
             moveParticles();
+
+            t += deltaT;
+            System.out.println(t);
         }
     }
 

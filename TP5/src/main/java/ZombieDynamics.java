@@ -22,8 +22,8 @@ public class ZombieDynamics {
         double Ap = Double.parseDouble(args[5]);
         double Bp = Double.parseDouble(args[6]);
         double savingT = Double.parseDouble(args[7]);
-        double tf = Double.parseDouble(args[8]);
-        double transformationT = Double.parseDouble(args[9]);
+        double transformationT = Double.parseDouble(args[8]);
+        double tf = Double.parseDouble(args[9]);
 
         int Nh = Integer.parseInt(myStaticReader.nextLine());
         double rmax = Double.parseDouble(myStaticReader.nextLine());
