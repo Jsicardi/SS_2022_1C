@@ -32,7 +32,7 @@ with open('data_ovito.txt', 'w') as f:
     for line in lines_r:
         tokens = line.replace("\n","").split('\t')
         if(len(tokens) == 1):
-            f.write(total_particles + "\n\n")
+            f.write(str(total_particles) + "\n\n")
         else:
             f.write("{0}\t{1}\t{2}\n".format(tokens[0],tokens[1],tokens[4]))
     f.close()
