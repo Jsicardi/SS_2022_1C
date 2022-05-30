@@ -51,17 +51,17 @@ public abstract class ZombieDynamicsHelper {
     public static void addOutputStep(double t, List<Particle> humans, List<Particle> zombies, Queue<TransformingAction> transformingActions) throws IOException {
         StringBuilder builder;
 
-        fileWriter.write(String.format("%g\n", t));
+        fileWriter.write(String.format(Locale.US,"%g\n", t));
 
         for(Particle human : humans){
-            fileWriter.write(String.format("%g\t%g\t%g\t%g\t%s\n", human.getX(), human.getY(), human.getVx(), human.getVy(), "H"));
+            fileWriter.write(String.format(Locale.US,"%g\t%g\t%g\t%g\t%s\n", human.getX(), human.getY(), human.getVx(), human.getVy(), "H"));
         }
         for(Particle zombie : zombies){
-            fileWriter.write(String.format("%g\t%g\t%g\t%g\t%s\n", zombie.getX(), zombie.getY(), zombie.getVx(), zombie.getVy(), "Z"));
+            fileWriter.write(String.format(Locale.US,"%g\t%g\t%g\t%g\t%s\n", zombie.getX(), zombie.getY(), zombie.getVx(), zombie.getVy(), "Z"));
         }
         for(TransformingAction transformingAction : transformingActions){
-            fileWriter.write(String.format("%g\t%g\t%g\t%g\t%s\n", transformingAction.getHuman().getX(), transformingAction.getHuman().getY(), transformingAction.getHuman().getVx(), transformingAction.getHuman().getVy(), "T"));
-            fileWriter.write(String.format("%g\t%g\t%g\t%g\t%s\n", transformingAction.getZombie().getX(), transformingAction.getZombie().getY(), transformingAction.getZombie().getVx(), transformingAction.getZombie().getVy(), "T"));
+            fileWriter.write(String.format(Locale.US,"%g\t%g\t%g\t%g\t%s\n", transformingAction.getHuman().getX(), transformingAction.getHuman().getY(), transformingAction.getHuman().getVx(), transformingAction.getHuman().getVy(), "T"));
+            fileWriter.write(String.format(Locale.US,"%g\t%g\t%g\t%g\t%s\n", transformingAction.getZombie().getX(), transformingAction.getZombie().getY(), transformingAction.getZombie().getVx(), transformingAction.getZombie().getVy(), "T"));
         }
 
     }

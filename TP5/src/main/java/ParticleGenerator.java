@@ -26,7 +26,7 @@ public class ParticleGenerator {
         FileWriter staticWriter = new FileWriter("static_rand.txt");
         FileWriter dynamicWriter = new FileWriter("dynamic_rand.txt");
 
-        staticWriter.write(String.format(Locale.US,"%d\n%g\n%g\n", Nh,rmax,R));
+        staticWriter.write(String.format(Locale.US,"%d\n%g\n%g\n", Nh+1,rmax,R));
         for(int i = 0; i <= Nh; i++){
             staticWriter.write(String.format(Locale.US,"%d\t%g\n", i, rmin));
         }

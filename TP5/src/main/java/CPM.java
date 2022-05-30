@@ -6,7 +6,7 @@ import java.math.RoundingMode;
 public class CPM {
 
     private static final double TAU = 0.5;
-    private static final double EPSILON = 1e-14;
+    private static final double EPSILON = 1e-10;
     private static final double ZOMBIE_VISION_RADIUS = 4;
     private static final double ZOMBIE_ESCAPE_WEIGHT = 3;
     private final double rMin;
@@ -14,7 +14,6 @@ public class CPM {
     private final double R;
     private final double deltaT;
     private final double savingT;
-    private final double cutConditionT;
     private final double tf;
     private final double vzi;
     private final double vdz;
@@ -30,7 +29,7 @@ public class CPM {
     private final Queue<TransformingAction> transformingActions;
     private double t = 0;
 
-    public CPM(double rMax,double R, double vdh, double vdz, double Ap, double Bp, double savingT, double cutConditionT, double transformationTime, double tf, List<Particle> humans, List<Particle> zombies){
+    public CPM(double rMax,double R, double vdh, double vdz, double Ap, double Bp, double savingT, double transformationTime, double tf, List<Particle> humans, List<Particle> zombies){
         this.rMin = zombies.get(0).getR();
         this.rMax = rMax;
         this.R = R;
@@ -40,7 +39,6 @@ public class CPM {
         this.vzi = Math.sqrt(Math.pow(zombies.get(0).getVx(), 2) + Math.pow(zombies.get(0).getVy(), 2));
         this.savingT = savingT;
         this.transformationTime = transformationTime;
-        this.cutConditionT = cutConditionT;
         this.tf = tf;
         this.Ap = Ap;
         this.Bp = Bp;
@@ -48,7 +46,7 @@ public class CPM {
         this.Bpz = Bp*ZOMBIE_ESCAPE_WEIGHT;
         this.zombies = zombies;
         this.humans = humans;
-        this.deltaT = this.rMin / 2*(this.vdh);
+        this.deltaT = this.rMin / (2*(this.vdh));
         this.transformingActions = new LinkedList<>();
     }
 
@@ -78,6 +76,9 @@ public class CPM {
 
             // Iterate: move particles
             moveParticles();
+
+            t += deltaT;
+            System.out.println(t);
         }
     }
 
