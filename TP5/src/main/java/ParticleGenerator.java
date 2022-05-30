@@ -41,7 +41,7 @@ public class ParticleGenerator {
         double humanX = 0;
         double humanY = 0;
         double distance = 0;
-        for(int i = 1; i <= Nh+1; i++){
+        for(int i = 1; i <= Nh; i++){
             humanX = (Math.random() * 2 - 1) * R;
             humanY = (Math.random() * 2 - 1) * R;
             distance = Math.pow(humanX+rmin, 2) + Math.pow(humanY+rmin, 2);

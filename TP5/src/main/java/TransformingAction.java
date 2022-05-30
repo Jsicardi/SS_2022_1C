@@ -21,4 +21,12 @@ public class TransformingAction {
         return human;
     }
 
+    @Override
+    public String toString() {
+        return "TransformingAction{" +
+                "timestamp=" + timestamp +
+                ", zombie=" + zombie +
+                ", human=" + human +
+                '}';
+    }
 }

@@ -168,11 +168,11 @@ public class CPM {
         double closestDistance = Integer.MAX_VALUE;
 
         List<Particle> allZombies = Stream.concat(zombies.stream(), transformingActions.stream().map(TransformingAction::getZombie)).collect(Collectors.toList());
-        System.out.println("\nFinding closest zombie: " + " zombies: " + allZombies.size());
+        //System.out.println("\nFinding closest zombie: " + " zombies: " + allZombies.size());
 
         double dist;
         for (Particle zombie : allZombies){
-            System.out.println("Human: " + hx + ", " + hy + " Zombie: " + zombie.getX() + " " + zombie.getY());
+            //System.out.println("Human: " + hx + ", " + hy + " Zombie: " + zombie.getX() + " " + zombie.getY());
             dist = getDistance(hx,hy,zombie.getX(),zombie.getY(),particle.getR(),zombie.getR());
             if (callingZombie){
                 if (dist <= ZOMBIE_VISION_RADIUS && dist < closestDistance && !zombie.equals(particle)){
@@ -180,16 +180,16 @@ public class CPM {
                     closestZombie = zombie;
                 }
             } else {
-                System.out.println("Distance: " + dist + " closestDistance: " + closestDistance);
+                //System.out.println("Distance: " + dist + " closestDistance: " + closestDistance);
                 if (dist < closestDistance && !zombie.equals(particle)) {
-                    System.out.println("Asigno");
+                    //System.out.println("Asigno");
                     closestDistance = dist;
                     closestZombie = zombie;
                 }
             }
         }
 
-        System.out.println("Closest zombie: " + closestZombie);
+        //System.out.println("Closest zombie: " + closestZombie);
         return closestZombie;
     }
 
@@ -356,7 +356,7 @@ public class CPM {
         double zx = zombie.getX();
         double zy = zombie.getY();
 
-        System.out.printf("Closest Human: %s Zombie: %s\n", closestHuman, zombie);
+        //System.out.printf("Closest Human: %s Zombie: %s\n", closestHuman, zombie);
 
         // Run towards human
         double[] towardsHumanDir = {0, 0};
@@ -372,7 +372,7 @@ public class CPM {
             towardsHumanDir[0] = towardsHumanDir[0] / distFromZombie;
             towardsHumanDir[1] = towardsHumanDir[1] / distFromZombie;
 
-            System.out.println("finalDirection: " + towardsHumanDir[0] + " " + towardsHumanDir[1]);
+            //System.out.println("finalDirection: " + towardsHumanDir[0] + " " + towardsHumanDir[1]);
             zombie.setVx(towardsHumanDir[0] * vdz);
             zombie.setVy(towardsHumanDir[1] * vdz);
         }
@@ -389,7 +389,7 @@ public class CPM {
 
         while (!stop){
             TransformingAction closest = transformingActions.peek();
-            if (closest != null && closest.getTimestamp() > t - EPSILON){
+            if (closest != null && (t - EPSILON) > closest.getTimestamp()){
 
                 // Transformation done
                 Particle human = closest.getHuman();
@@ -436,6 +436,10 @@ public class CPM {
                 if (distance <= ZOMBIE_VISION_RADIUS) {
                     if (distance <= humans.get(i).getR() + zombie.getR()) {
                         itr.remove();
+                        zombie.setVx(0);
+                        zombie.setVy(0);
+                        humans.get(i).setVx(0);
+                        humans.get(i).setVy(0);
                         transformingActions.add(new TransformingAction(t + transformationTime, zombie, humans.get(i)));
                         humans.remove(i);
                         break;
