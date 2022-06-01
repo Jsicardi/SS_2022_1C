@@ -235,10 +235,11 @@ public class CPM {
         double distance;
         Particle human1;
         Particle human2;
-        for(int i=0; i < humans.size(); i++){
-            human1 = humans.get(i);
-            for(int j=i+1; j < humans.size(); j++){
-                human2 = humans.get(j);
+        List<Particle> allHumans = Stream.concat(Stream.concat(humans.stream(), transformingActions.stream().map(TransformingAction::getHuman)),transformingActions.stream().map(TransformingAction::getZombie)).collect(Collectors.toList());
+        for(int i=0; i < allHumans.size(); i++){
+            human1 = allHumans.get(i);
+            for(int j=i+1; j < allHumans.size(); j++){
+                human2 = allHumans.get(j);
                 distance = getDistance(human1.getX(), human1.getY(), human2.getX(), human2.getY(), human1.getR(), human2.getR());
                 if (distance <= human1.getR() + human2.getR()){
                     contacts.put(human1,human2);
@@ -254,10 +255,11 @@ public class CPM {
         double distance;
         Particle zombie1;
         Particle zombie2;
-        for(int i=0; i < zombies.size(); i++){
-            zombie1 = zombies.get(i);
-            for(int j=i+1; j < zombies.size(); j++){
-                zombie2 = zombies.get(j);
+        List<Particle> allZombies = Stream.concat(Stream.concat(zombies.stream(), transformingActions.stream().map(TransformingAction::getHuman)),transformingActions.stream().map(TransformingAction::getZombie)).collect(Collectors.toList());
+        for(int i=0; i < allZombies.size(); i++){
+            zombie1 = allZombies.get(i);
+            for(int j=i+1; j < allZombies.size(); j++){
+                zombie2 = allZombies.get(j);
                 distance = getDistance(zombie1.getX(), zombie1.getY(), zombie2.getX(), zombie2.getY(), zombie1.getR(), zombie2.getR());
                 if (distance <= zombie1.getR() + zombie2.getR()){
                     contacts.put(zombie1,zombie2);
