@@ -83,7 +83,6 @@ public class CPM {
 
             t += deltaT;
             fz = (zombies.size() + transformingActions.size()) / Nh;
-            System.out.println(fz);
         }
     }
 
