@@ -8,7 +8,7 @@ path_answer_fz = "fz.csv"
 path_answer_velocity = "velocity.csv"
 
 runs = 10
-nhs = [2, 5, 10, 20, 40, 80, 160, 320]
+nhs = [2, 5, 10, 20, 40, 80, 140, 200, 260, 320]
 fzs = []
 nps = []
 velocities = []
@@ -19,32 +19,30 @@ fv = open(path_answer_velocity, "w")
 fv.write("nh,velocity,stdev\n")
 for nh in nhs:
     np = 0
-    nh = 0
+    nhi = 0
     #itero para guardar la velocidad de contagio y el Fz del final de la simulacion
     for i in range(runs):
         iteration = -1
-        nps = 0
-        file = open("{0}_{1}_{2}.txt".format(path_format, nh, i))
+        np = 0
+        file = open("{0}{1}_{2}.txt".format(path_format, nh, i+1))
         lines = file.readlines()
+        nps = []
         for line in lines:
             tokens = line.replace("\n", "").split('\t')
             if(len(tokens) == 1):
                 #treat nps
-                if(iteration > 0):
-                    nps[iteration] = nps
-                nps = 0
-                nh = 0
-                iteration +=1
+                if(iteration >= 0):
+                    nps.append(np)
+                np = 0
+                iteration += 1
             else:
                 if(tokens[4] == "2"):
-                    nps += 1
-                elif(tokens[4] == "0"):
-                    nh += 1
+                    np += 1
         #add last iteration
-        nps[iteration] = nps
-        fzs[iteration] = nps/nh
+        nps.append(np)
+        fzs.append(np/nh)
         #treat velocities
-        velocities[i] = statistics.mean(numpy.diff(nps))
+        velocities.append(statistics.mean(numpy.diff(nps)))
         file.close()
     fv.write("{0},{1},{2}\n".format(nh, statistics.mean(velocities), statistics.stdev(velocities)))
     fz.write("{0},{1},{2}\n".format(nh,statistics.mean(fzs), statistics.stdev(fzs)))
