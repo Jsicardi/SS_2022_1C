@@ -45,6 +45,10 @@ for nh in nhs:
         fzs[iteration] = nps/nh
         #treat velocities
         velocities[i] = statistics.mean(numpy.diff(nps))
+        file.close()
     fv.write("{0},{1},{2}\n".format(nh, statistics.mean(velocities), statistics.stdev(velocities)))
     fz.write("{0},{1},{2}\n".format(nh,statistics.mean(fzs), statistics.stdev(fzs)))
+
+fv.close()
+fz.close()
             
