@@ -54,14 +54,14 @@ public abstract class ZombieDynamicsHelper {
         fileWriter.write(String.format(Locale.US,"%g\n", t));
 
         for(Particle human : humans){
-            fileWriter.write(String.format(Locale.US,"%g\t%g\t%g\t%g\t%s\n", human.getX(), human.getY(), human.getVx(), human.getVy(), "0"));
+            fileWriter.write(String.format(Locale.US,"%g\t%g\t%g\t%g\t%g\t%s\n", human.getX(), human.getY(), human.getVx(), human.getVy(),human.getR(), "0"));
         }
         for(Particle zombie : zombies){
-            fileWriter.write(String.format(Locale.US,"%g\t%g\t%g\t%g\t%s\n", zombie.getX(), zombie.getY(), zombie.getVx(), zombie.getVy(), "2"));
+            fileWriter.write(String.format(Locale.US,"%g\t%g\t%g\t%g\t%g\t%s\n", zombie.getX(), zombie.getY(), zombie.getVx(), zombie.getVy(),zombie.getR(),"2"));
         }
         for(TransformingAction transformingAction : transformingActions){
-            fileWriter.write(String.format(Locale.US,"%g\t%g\t%g\t%g\t%s\n", transformingAction.getHuman().getX(), transformingAction.getHuman().getY(), transformingAction.getHuman().getVx(), transformingAction.getHuman().getVy(), "1"));
-            fileWriter.write(String.format(Locale.US,"%g\t%g\t%g\t%g\t%s\n", transformingAction.getZombie().getX(), transformingAction.getZombie().getY(), transformingAction.getZombie().getVx(), transformingAction.getZombie().getVy(), "1"));
+            fileWriter.write(String.format(Locale.US,"%g\t%g\t%g\t%g\t%g\t%s\n", transformingAction.getHuman().getX(), transformingAction.getHuman().getY(), transformingAction.getHuman().getVx(), transformingAction.getHuman().getVy(),transformingAction.getHuman().getR(), "1"));
+            fileWriter.write(String.format(Locale.US,"%g\t%g\t%g\t%g\t%g\t%s\n", transformingAction.getZombie().getX(), transformingAction.getZombie().getY(), transformingAction.getZombie().getVx(), transformingAction.getZombie().getVy(),transformingAction.getZombie().getR(),"1"));
         }
 
     }
