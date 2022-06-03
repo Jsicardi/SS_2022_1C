@@ -10,6 +10,7 @@ public class CPM {
     private static final double TAU = 0.5;
     private static final double EPSILON = 1e-10;
     private static final double ZOMBIE_VISION_RADIUS = 4;
+    private static final double HUMAN_VISION_RADIUS = 4;
     private static final double ZOMBIE_ESCAPE_WEIGHT = 2.5;
     private final double rMin;
     private final double rMax;
@@ -26,13 +27,14 @@ public class CPM {
     private final double Apz;
     private final double Bpz;
     private final double transformationTime;
+    private final double beta;
     private final List<Particle> zombies;
     private final List<Particle> humans;
     private final Queue<TransformingAction> transformingActions;
     private double t = 0;
     private double Nh = 0;
 
-    public CPM(double rMax,double R, double vdh, double vdz, double Ap, double Bp, double savingT, double transformationTime, double tf, List<Particle> humans, List<Particle> zombies){
+    public CPM(double rMax,double R, double vdh, double vdz, double Ap, double Bp, double savingT, double transformationTime, double tf,double beta, List<Particle> humans, List<Particle> zombies){
         this.rMin = zombies.get(0).getR();
         this.rMax = rMax;
         this.R = R;
@@ -52,6 +54,7 @@ public class CPM {
         this.Nh = humans.size();
         this.deltaT = this.rMin / (2*(this.vdh));
         this.transformingActions = new LinkedList<>();
+        this.beta = beta;
     }
 
     public void execute() throws IOException {
@@ -96,6 +99,9 @@ public class CPM {
                 human.setR(rMin);
             else if (human.getR() < rMax - EPSILON) {
                 human.setR(human.getR() + (rMax / (TAU / deltaT)));
+                if(human.getR() > rMax){
+                    human.setR(rMax);
+                }
             }
 
             // If in contact, escape
@@ -123,6 +129,9 @@ public class CPM {
                 zombie.setR(rMin);
             else if (zombie.getR() < rMax - EPSILON){
                 zombie.setR(zombie.getR() + (rMax / (TAU / deltaT)));
+                if(zombie.getR() > rMax){
+                    zombie.setR(rMax);
+                }
             }
 
             // If in contact, escape
@@ -166,13 +175,13 @@ public class CPM {
         double dist;
         for (Particle zombie : allZombies){
             dist = getDistance(hx,hy,zombie.getX(),zombie.getY(),particle.getR(),zombie.getR());
-            if (callingZombie){
+            if(callingZombie){
                 if (dist <= ZOMBIE_VISION_RADIUS && dist < closestDistance && !zombie.equals(particle)){
                     closestDistance = dist;
                     closestZombie = zombie;
                 }
             } else {
-                if (dist < closestDistance && !zombie.equals(particle)) {
+                if (dist <= HUMAN_VISION_RADIUS && dist < closestDistance && !zombie.equals(particle)){
                     closestDistance = dist;
                     closestZombie = zombie;
                 }
@@ -240,7 +249,7 @@ public class CPM {
             for(int j=i+1; j < allHumans.size(); j++){
                 human2 = allHumans.get(j);
                 distance = getDistance(human1.getX(), human1.getY(), human2.getX(), human2.getY(), human1.getR(), human2.getR());
-                if (distance <= human1.getR() + human2.getR()){
+                if (distance <= EPSILON){
                     contacts.put(human1,human2);
                     break;
                 }
@@ -260,7 +269,7 @@ public class CPM {
             for(int j=i+1; j < allZombies.size(); j++){
                 zombie2 = allZombies.get(j);
                 distance = getDistance(zombie1.getX(), zombie1.getY(), zombie2.getX(), zombie2.getY(), zombie1.getR(), zombie2.getR());
-                if (distance <= zombie1.getR() + zombie2.getR()){
+                if (distance <= EPSILON){
                     contacts.put(zombie1,zombie2);
                     break;
                 }
@@ -286,7 +295,7 @@ public class CPM {
             closestWallY = y / magV * R;
             distance = getDistance(p.getX(),p.getY(),closestWallX,closestWallY,p.getR(),0);
 
-            if(distance <= p.getR()){
+            if(distance <= EPSILON){
                 contacts.put(p,Arrays.asList(closestWallX,closestWallY));
             }
         }
@@ -313,6 +322,11 @@ public class CPM {
         double hx = human.getX();
         double hy = human.getY();
 
+        if(closestZombie == null){
+            human.setVx(0);
+            human.setVy(0);
+            return;
+        }
         // Avoid human
         double[] awayFromHumanDir = {0, 0};
         if (closestHuman != null){
@@ -336,8 +350,8 @@ public class CPM {
         double distFinal = Math.sqrt(Math.pow(finalDirection[0], 2) + Math.pow(finalDirection[1], 2));
         finalDirection[0] = finalDirection[0] / distFinal;
         finalDirection[1] = finalDirection[1] / distFinal;
-        human.setVx(finalDirection[0] * vdh);
-        human.setVy(finalDirection[1] * vdh);
+        human.setVx((finalDirection[0] * vdh * Math.pow((human.getR() - rMin) / (rMax - rMin), beta)));
+        human.setVy((finalDirection[1] * vdh * Math.pow((human.getR() - rMin) / (rMax - rMin), beta)));
     }
 
     private void giveZombieTarget(Particle zombie, Particle closestHuman) {
@@ -349,8 +363,8 @@ public class CPM {
         double[] towardsHumanDir = {0, 0};
         if(closestHuman == null){
             double angle = Math.atan2(zombie.getVy(), zombie.getVx());
-            zombie.setVx(vzi * Math.cos(angle));
-            zombie.setVy(vzi * Math.sin(angle));
+            zombie.setVx(vzi * Math.cos(angle) * Math.pow((zombie.getR() - rMin) / (rMax - rMin), beta));
+            zombie.setVy(vzi * Math.sin(angle) * Math.pow((zombie.getR() - rMin) / (rMax - rMin), beta));
         }
         else {
             towardsHumanDir[0] = closestHuman.getX() - zx;
@@ -358,10 +372,9 @@ public class CPM {
             double distFromZombie = Math.sqrt(Math.pow(towardsHumanDir[0], 2) + Math.pow(towardsHumanDir[1], 2));
             towardsHumanDir[0] = towardsHumanDir[0] / distFromZombie;
             towardsHumanDir[1] = towardsHumanDir[1] / distFromZombie;
-
-            //System.out.println("finalDirection: " + towardsHumanDir[0] + " " + towardsHumanDir[1]);
-            zombie.setVx(towardsHumanDir[0] * vdz);
-            zombie.setVy(towardsHumanDir[1] * vdz);
+            
+            zombie.setVx((towardsHumanDir[0] * vdz * Math.pow((zombie.getR() - rMin) / (rMax - rMin), beta)));
+            zombie.setVy((towardsHumanDir[1] * vdz * Math.pow((zombie.getR() - rMin) / (rMax - rMin), beta)));
         }
     }
 
@@ -381,17 +394,15 @@ public class CPM {
                 // Transformation done
                 Particle human = closest.getHuman();
                 humanAngle = Math.toRadians(Math.random() * 360);
-                humanVx = vzi * Math.cos(humanAngle);
-                humanVy = vzi * Math.sin(humanAngle);
-                human.setVx(humanVx);
-                human.setVy(humanVy);
+                human.setR(rMin);
+                human.setVx(0.0000001 * humanAngle);
+                human.setVy(0.0000001 * humanAngle);
                 zombies.add(human);
 
                 zombieAngle = Math.toRadians(Math.random() * 360);
-                zombieVx = vzi * Math.cos(zombieAngle);
-                zombieVy = vzi * Math.sin(zombieAngle);
-                closest.getZombie().setVx(zombieVx);
-                closest.getZombie().setVy(zombieVy);
+                closest.getZombie().setR(rMin);
+                closest.getZombie().setVx(0.0000001 * zombieAngle);
+                closest.getZombie().setVy(0.0000001 * zombieAngle);
                 zombies.add(closest.getZombie());
 
                 transformingActions.remove();
@@ -421,7 +432,7 @@ public class CPM {
             for(int i=0; i< humans.size(); i++) {
                 distance = getDistance(humans.get(i).getX(), humans.get(i).getY(), zombie.getX(), zombie.getY(), humans.get(i).getR(), zombie.getR());
                 if (distance <= ZOMBIE_VISION_RADIUS) {
-                    if (distance <= humans.get(i).getR() + zombie.getR()) {
+                    if (distance <= EPSILON) {
                         itr.remove();
                         zombie.setVx(0);
                         zombie.setVy(0);
