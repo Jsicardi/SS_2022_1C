@@ -8,7 +8,7 @@ path_answer_fz = "fz.csv"
 path_answer_velocity = "velocity.csv"
 
 runs = 10
-nhs = [2,5,10,20,40,80,140,200,260,320]
+nhs = [2, 5, 10, 20, 40, 80, 160, 320]
 fzs = []
 nps = []
 velocities = []
@@ -51,4 +51,3 @@ for nh in nhs:
 
 fv.close()
 fz.close()
-            
