@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import static java.lang.System.exit;
@@ -38,16 +40,55 @@ public class ParticleGenerator {
         double zombieVy = vzi * Math.sin(zombieAngle);
         dynamicWriter.write(String.format(Locale.US,"0\t0\t0\t%g\t%g\n",zombieVx,zombieVy));
 
-        double humanAngle = 0;
-        double distance = 0;
-        double distanceToZombie = 0;
+
+        List<Particle> particles = new ArrayList<Particle>();
+
         for(int i = 1; i <= Nh; i++){
-            while(distance <= 1) {
+            double distance = 0;
+            double humanAngle = 0;
+            double humanX = 0, humanY = 0;
+            while(distance <= 1 || superpositions(humanX, humanY, particles, rmax)) {
                 humanAngle = Math.toRadians(Math.random() * 360);
                 distance = Math.random() * (R - rmax);
+                humanX = Math.cos(humanAngle) * distance;
+                humanY = Math.sin(humanAngle) * distance;
             }
-            dynamicWriter.write(String.format(Locale.US,"%d\t%g\t%g\t0\t0\n",i,Math.cos(humanAngle) * distance,Math.sin(humanAngle) * distance));
+            particles.add(new Particle(humanX, humanY));
+            dynamicWriter.write(String.format(Locale.US,"%d\t%g\t%g\t0\t0\n",i, humanX, humanY));
         }
         dynamicWriter.close();
+    }
+
+    private static class Particle {
+        private double x, y;
+        Particle(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public double getX() {
+            return x;
+        }
+
+        public void setX(double x) {
+            this.x = x;
+        }
+
+        public double getY() {
+            return y;
+        }
+
+        public void setY(double y) {
+            this.y = y;
+        }
+    }
+
+    private static boolean superpositions(double x, double y, List<Particle> particles, double rmax) {
+        for (Particle particle : particles) {
+            if(Math.sqrt(Math.pow((particle.getY() - y), 2) + Math.pow((particle.getX() - x), 2)) <= rmax) {
+                return true;
+            }
+        }
+        return false;
     }
 }
