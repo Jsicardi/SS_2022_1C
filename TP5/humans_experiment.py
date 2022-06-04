@@ -9,15 +9,14 @@ path_answer_velocity = "velocity.csv"
 
 runs = 10
 nhs = [2, 5, 10, 20, 40, 80, 140, 200, 260, 320]
-fzs = []
-nps = []
-velocities = []
 
 fz = open(path_answer_fz, "w")
 fz.write("nh,fz,stdev\n")
 fv = open(path_answer_velocity, "w")
 fv.write("nh,velocity,stdev\n")
 for nh in nhs:
+    velocities = []
+    fzs = []
     np = 0
     nhi = 0
     #itero para guardar la velocidad de contagio y el Fz del final de la simulacion
@@ -36,7 +35,7 @@ for nh in nhs:
                 np = 0
                 iteration += 1
             else:
-                if(tokens[4] == "2"):
+                if(tokens[5] == "2"):
                     np += 1
         #add last iteration
         nps.append(np)
