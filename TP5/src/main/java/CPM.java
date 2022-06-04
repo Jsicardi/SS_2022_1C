@@ -101,8 +101,12 @@ public class CPM {
         Map<Particle, List<Double>> wallContacts = getWallContacts(humans);       // Return  particle -> (x, y) of wall position that's in contact
         for (Particle human : humans) {
             // Update radii based on if human is in contact with something
-            if (humanContacts.containsKey(human) || wallContacts.containsKey(human))
+            if (humanContacts.containsKey(human) || wallContacts.containsKey(human)) {
                 human.setR(rMin);
+                if(humanContacts.containsKey(human)) {
+                    humanContacts.get(human).setR(rMin);
+                }
+            }
             else if (human.getR() < rMax - EPSILON) {
                 human.setR(human.getR() + (rMax / (TAU / deltaT)));
                 if(human.getR() > rMax){
@@ -133,6 +137,9 @@ public class CPM {
             // Update radii based on if human is in contact with something
             if (zombiesContacts.containsKey(zombie) || wallContacts.containsKey(zombie))
                 zombie.setR(rMin);
+                if(zombiesContacts.containsKey(zombie)){
+                    zombiesContacts.get(zombie).setR(rMin);
+                }
             else if (zombie.getR() < rMax - EPSILON){
                 zombie.setR(zombie.getR() + (rMax / (TAU / deltaT)));
                 if(zombie.getR() > rMax){

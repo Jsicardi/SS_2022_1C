@@ -16,11 +16,13 @@ public class ZombieVelocityExperiment {
         double tf = 300;
         double R = 11;
         double beta = 1;
+        double cureProbability = 0;
+        boolean withEnergy = false;
 
         for(double vdz : velocities){
             for(int i = 1; i <= 10; i++){
                 ParticleGenerator.main(new String[]{Integer.toString(Nh),Double.toString(rmin), Double.toString(rmax), Double.toString(vzi), Double.toString(R)});
-                ZombieDynamics.main(new String[]{"static_rand.txt", "dynamic_rand.txt", String.format(Locale.US,"result_%.2g_%d.txt",vdz,i),Double.toString(vdh), Double.toString(vdz), Double.toString(Ap), Double.toString(Bp), Double.toString(savingT), Double.toString(transformationT), Double.toString(tf), Double.toString(beta)});
+                ZombieDynamics.main(new String[]{"static_rand.txt", "dynamic_rand.txt", String.format(Locale.US,"result_%.2g_%d.txt",vdz,i),Double.toString(vdh), Double.toString(vdz), Double.toString(Ap), Double.toString(Bp), Double.toString(savingT), Double.toString(transformationT), Double.toString(tf), Double.toString(beta), Double.toString(cureProbability), Boolean.toString(withEnergy)});
                 System.out.printf("%s generated\n", String.format(Locale.US,"result_%.2g_%d.txt",vdz,i));
             }
         }
