@@ -4,17 +4,19 @@ import numpy
 
 
 path_format = "result_"
-path_answer_fz = "nh_fz.csv"
-path_answer_velocity = "nh_velocity.csv"
+path_answer_fz = "v_fz.csv"
+path_answer_velocity = "v_velocity.csv"
 
 runs = 10
-nhs = [2, 5, 10, 20, 40, 80, 140, 200, 260, 320]
+vdzs = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
 
 fz = open(path_answer_fz, "w")
-fz.write("nh,fz,stdev\n")
+fz.write("vdz,fz,stdev\n")
 fv = open(path_answer_velocity, "w")
-fv.write("nh,velocity,stdev\n")
-for nh in nhs:
+fv.write("vdz,velocity,stdev\n")
+
+nh = 200
+for vdz in vdzs:
     velocities = []
     fzs = []
     np = 0
@@ -22,7 +24,7 @@ for nh in nhs:
     for i in range(runs):
         iteration = -1
         np = 0
-        file = open("{0}{1}_{2}.txt".format(path_format, nh, i+1))
+        file = open("{0}{1}_{2}.txt".format(path_format, vz, i+1))
         lines = file.readlines()
         nps = []
         for line in lines:
@@ -42,8 +44,8 @@ for nh in nhs:
         #treat velocities
         velocities.append(statistics.mean(numpy.diff(nps)))
         file.close()
-    fv.write("{0},{1},{2}\n".format(nh, statistics.mean(velocities), statistics.stdev(velocities)))
-    fz.write("{0},{1},{2}\n".format(nh,statistics.mean(fzs), statistics.stdev(fzs)))
+    fv.write("{0},{1},{2}\n".format(vdz, statistics.mean(velocities), statistics.stdev(velocities)))
+    fz.write("{0},{1},{2}\n".format(vdz,statistics.mean(fzs), statistics.stdev(fzs)))
 
 fv.close()
 fz.close()
