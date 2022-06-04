@@ -2,11 +2,14 @@ public class TransformingAction {
     private final double timestamp;
     private final Particle zombie;
     private final Particle human;
+    private TransformationType type;
 
-    public TransformingAction(double timestamp, Particle zombie, Particle human) {
+
+    public TransformingAction(double timestamp, Particle zombie, Particle human, TransformationType type) {
         this.timestamp = timestamp;
         this.zombie = zombie;
         this.human = human;
+        this.type = type;
     }
 
     public double getTimestamp() {
@@ -19,6 +22,10 @@ public class TransformingAction {
 
     public Particle getHuman() {
         return human;
+    }
+
+    public TransformationType getType() {
+        return type;
     }
 
     @Override

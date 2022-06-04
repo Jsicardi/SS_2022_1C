@@ -46,7 +46,7 @@ for vdz in vdzs:
         #add last iteration
         np += (transf_zombies / 2)
         nps.append(np)
-        fzs.append(np/nh)
+        fzs.append(np/(nh+1))
         #treat velocities
         velocities.append(statistics.mean(numpy.diff(nps)))
         file.close()

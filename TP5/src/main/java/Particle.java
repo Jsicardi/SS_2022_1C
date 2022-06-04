@@ -6,13 +6,15 @@ public class Particle {
     private double vx;
     private double vy;
     private double r;
+    private double energy;
 
-    public Particle(double x, double y,double vx, double vy, double r) {
+    public Particle(double x, double y,double vx, double vy, double r, double energy) {
         this.x = x;
         this.y = y;
         this.vx = vx;
         this.vy = vy;
         this.r = r;
+        this.energy = energy;
     }
 
     public double getVx() {
@@ -53,6 +55,14 @@ public class Particle {
 
     public double getR() {
         return r;
+    }
+
+    public double getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(double energy) {
+        this.energy = energy;
     }
 
     @Override
