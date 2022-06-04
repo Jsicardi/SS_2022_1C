@@ -40,9 +40,12 @@ public class ParticleGenerator {
 
         double humanAngle = 0;
         double distance = 0;
+        double distanceToZombie = 0;
         for(int i = 1; i <= Nh; i++){
-            humanAngle = Math.toRadians(Math.random() * 360);
-            distance = Math.random() * (R-rmax);
+            while(distance <= 1) {
+                humanAngle = Math.toRadians(Math.random() * 360);
+                distance = Math.random() * (R - rmax);
+            }
             dynamicWriter.write(String.format(Locale.US,"%d\t%g\t%g\t0\t0\n",i,Math.cos(humanAngle) * distance,Math.sin(humanAngle) * distance));
         }
         dynamicWriter.close();
