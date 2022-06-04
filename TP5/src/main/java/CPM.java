@@ -12,7 +12,7 @@ public class CPM {
     private static final double ZOMBIE_VISION_RADIUS = 4;
     private static final double HUMAN_VISION_RADIUS = 4;
     private static final double ZOMBIE_ESCAPE_WEIGHT = 2.5;
-    private static final double ENERGY_CHANGE = 0.01;
+    private static final double ENERGY_CHANGE = 0.005;
     private static final double MAX_ENERGY = 2;
     private final double rMin;
     private final double rMax;
@@ -111,6 +111,18 @@ public class CPM {
                 human.setR(human.getR() + (rMax / (TAU / deltaT)));
                 if(human.getR() > rMax){
                     human.setR(rMax);
+                }
+            }
+
+            if (withEnergy) {
+                if (human.getVx() < vdh/10 && human.getVy() < vdh/10) {   // Rest
+                    human.setEnergy(human.getEnergy() + 10 * ENERGY_CHANGE);
+                    if (human.getEnergy() > MAX_ENERGY)
+                        human.setEnergy(MAX_ENERGY);
+                } else {
+                    human.setEnergy(human.getEnergy() - ENERGY_CHANGE);     // Get fatigued
+                    if (human.getEnergy() < 0)
+                        human.setEnergy(0);
                 }
             }
 
@@ -338,16 +350,7 @@ public class CPM {
         if(closestZombie == null){
             human.setVx(0);
             human.setVy(0);
-            if (withEnergy) {
-                human.setEnergy(human.getEnergy() + 2 * ENERGY_CHANGE);
-                if (human.getEnergy() > MAX_ENERGY)
-                    human.setEnergy(MAX_ENERGY);
-            }
             return;
-        } else if (withEnergy) {
-            human.setEnergy(human.getEnergy() - ENERGY_CHANGE);
-            if (human.getEnergy() < 0)
-                human.setEnergy(0);
         }
 
 
