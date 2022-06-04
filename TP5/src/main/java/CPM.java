@@ -32,9 +32,10 @@ public class CPM {
     private final List<Particle> humans;
     private final Queue<TransformingAction> transformingActions;
     private double t = 0;
-    private double Nh = 0;
+    private double Nh;
+    private final double cureProbability;
 
-    public CPM(double rMax,double R, double vdh, double vdz, double Ap, double Bp, double savingT, double transformationTime, double tf,double beta, List<Particle> humans, List<Particle> zombies){
+    public CPM(double rMax,double R, double vdh, double vdz, double Ap, double Bp, double savingT, double transformationTime, double tf,double beta,double cureProbability, List<Particle> humans, List<Particle> zombies){
         this.rMin = zombies.get(0).getR();
         this.rMax = rMax;
         this.R = R;
@@ -55,16 +56,17 @@ public class CPM {
         this.deltaT = this.rMin / (2*(this.vdh));
         this.transformingActions = new LinkedList<>();
         this.beta = beta;
+        this.cureProbability = cureProbability;
     }
 
     public void execute() throws IOException {
 
         // Initialize aux variables
         double auxT;
-        double fz = 0;
+        double fz = 0.0001;
 
         // Iterations
-        while(fz < 1 && t < tf) {
+        while(fz > EPSILON && fz < 1 && t < tf) {
             // Check save state
             if ((t % savingT) < EPSILON || (t % savingT) > savingT - EPSILON) {
                 auxT = round(t, 15);
@@ -85,7 +87,7 @@ public class CPM {
             moveParticles();
 
             t += deltaT;
-            fz = (zombies.size() + transformingActions.size()) / Nh;
+            fz = (zombies.size() + transformingActions.size()) / (Nh+1);
         }
     }
 
@@ -381,29 +383,34 @@ public class CPM {
     private void checkTransformationsEnd(){
         boolean stop = false;
         double humanAngle;
-        double humanVx;
-        double humanVy;
         double zombieAngle;
-        double zombieVx;
-        double zombieVy;
 
         while (!stop){
             TransformingAction closest = transformingActions.peek();
             if (closest != null && (t - EPSILON) > closest.getTimestamp()){
 
-                // Transformation done
-                Particle human = closest.getHuman();
-                humanAngle = Math.toRadians(Math.random() * 360);
-                human.setR(rMin);
-                human.setVx(0.0000001 * humanAngle);
-                human.setVy(0.0000001 * humanAngle);
-                zombies.add(human);
+                if(closest.getType() == TransformationType.CONSUME) {
+                    // Transformation done
+                    Particle human = closest.getHuman();
+                    humanAngle = Math.toRadians(Math.random() * 360);
+                    human.setR(rMin);
+                    human.setVx(0.0000001 * humanAngle);
+                    human.setVy(0.0000001 * humanAngle);
+                    zombies.add(human);
 
-                zombieAngle = Math.toRadians(Math.random() * 360);
-                closest.getZombie().setR(rMin);
-                closest.getZombie().setVx(0.0000001 * zombieAngle);
-                closest.getZombie().setVy(0.0000001 * zombieAngle);
-                zombies.add(closest.getZombie());
+                    zombieAngle = Math.toRadians(Math.random() * 360);
+                    closest.getZombie().setR(rMin);
+                    closest.getZombie().setVx(0.0000001 * zombieAngle);
+                    closest.getZombie().setVy(0.0000001 * zombieAngle);
+                    zombies.add(closest.getZombie());
+                }
+                else{
+                    Particle human = closest.getHuman();
+                    human.setR(rMin);
+                    humans.add(human);
+                    closest.getZombie().setR(rMin);
+                    humans.add(closest.getZombie());
+                }
 
                 transformingActions.remove();
             } else
@@ -427,18 +434,25 @@ public class CPM {
     private void checkZombieBite(){
         Iterator<Particle> itr = zombies.iterator();
         double distance;
+        double randomProb;
+        TransformationType type;
         while (itr.hasNext()){
             Particle zombie = itr.next();
             for(int i=0; i< humans.size(); i++) {
                 distance = getDistance(humans.get(i).getX(), humans.get(i).getY(), zombie.getX(), zombie.getY(), humans.get(i).getR(), zombie.getR());
                 if (distance <= ZOMBIE_VISION_RADIUS) {
                     if (distance <= EPSILON) {
+                        type = TransformationType.CONSUME;
                         itr.remove();
                         zombie.setVx(0);
                         zombie.setVy(0);
                         humans.get(i).setVx(0);
                         humans.get(i).setVy(0);
-                        transformingActions.add(new TransformingAction(t + transformationTime, zombie, humans.get(i)));
+                        randomProb = Math.random();
+                        if(randomProb < cureProbability){
+                            type = TransformationType.CURE;
+                        }
+                        transformingActions.add(new TransformingAction(t + transformationTime, zombie, humans.get(i), type));
                         humans.remove(i);
                         break;
                     }

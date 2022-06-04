@@ -7,7 +7,7 @@ import static java.lang.System.exit;
 public class ZombieDynamics {
     public static void main(String[] args) throws IOException {
 
-        if(args.length != 11){
+        if(args.length != 12){
             System.out.println("Invalid arguments quantity");
             exit(-1);
         }
@@ -25,6 +25,7 @@ public class ZombieDynamics {
         double transformationT = Double.parseDouble(args[8]);
         double tf = Double.parseDouble(args[9]);
         double beta = Double.parseDouble(args[10]);
+        double cureProbability = Double.parseDouble(args[11]);
 
         int Nh = Integer.parseInt(myStaticReader.nextLine());
         double rmax = Double.parseDouble(myStaticReader.nextLine());
@@ -46,7 +47,7 @@ public class ZombieDynamics {
 
         ZombieDynamicsHelper.createOutputFile(outputPath);
 
-        CPM cpmMethod = new CPM(rmax,R,vdh,vdz,Ap,Bp,savingT,transformationT,tf,beta,humans,zombies);
+        CPM cpmMethod = new CPM(rmax,R,vdh,vdz,Ap,Bp,savingT,transformationT,tf,beta,cureProbability,humans,zombies);
 
         cpmMethod.execute();
 
