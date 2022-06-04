@@ -7,7 +7,7 @@ import static java.lang.System.exit;
 public class ZombieDynamics {
     public static void main(String[] args) throws IOException {
 
-        if(args.length != 12){
+        if(args.length != 13){
             System.out.println("Invalid arguments quantity");
             exit(-1);
         }
@@ -26,6 +26,7 @@ public class ZombieDynamics {
         double tf = Double.parseDouble(args[9]);
         double beta = Double.parseDouble(args[10]);
         double cureProbability = Double.parseDouble(args[11]);
+        boolean withEnergy = Boolean.parseBoolean(args[12]);
 
         int Nh = Integer.parseInt(myStaticReader.nextLine());
         double rmax = Double.parseDouble(myStaticReader.nextLine());
@@ -41,13 +42,13 @@ public class ZombieDynamics {
         double zombieY = Double.parseDouble(tokenizer.nextToken());
         double zombieVx = Double.parseDouble(tokenizer.nextToken());
         double zombieVy = Double.parseDouble(tokenizer.nextToken());
-        zombies.add(new Particle(zombieX,zombieY,zombieVx,zombieVy,rads.get(0)));
+        zombies.add(new Particle(zombieX,zombieY,zombieVx,zombieVy,rads.get(0),2));
 
         List<Particle> humans = ZombieDynamicsHelper.parseDynamicProperties(myDynamicReader,rads);
 
         ZombieDynamicsHelper.createOutputFile(outputPath);
 
-        CPM cpmMethod = new CPM(rmax,R,vdh,vdz,Ap,Bp,savingT,transformationT,tf,beta,cureProbability,humans,zombies);
+        CPM cpmMethod = new CPM(rmax,R,vdh,vdz,Ap,Bp,savingT,transformationT,tf,beta,cureProbability,humans,zombies,withEnergy);
 
         cpmMethod.execute();
 

@@ -12,6 +12,8 @@ public class CPM {
     private static final double ZOMBIE_VISION_RADIUS = 4;
     private static final double HUMAN_VISION_RADIUS = 4;
     private static final double ZOMBIE_ESCAPE_WEIGHT = 2.5;
+    private static final double ENERGY_CHANGE = 0.01;
+    private static final double MAX_ENERGY = 2;
     private final double rMin;
     private final double rMax;
     private final double R;
@@ -34,8 +36,9 @@ public class CPM {
     private double t = 0;
     private double Nh;
     private final double cureProbability;
+    private final boolean withEnergy;
 
-    public CPM(double rMax,double R, double vdh, double vdz, double Ap, double Bp, double savingT, double transformationTime, double tf,double beta,double cureProbability, List<Particle> humans, List<Particle> zombies){
+    public CPM(double rMax,double R, double vdh, double vdz, double Ap, double Bp, double savingT, double transformationTime, double tf,double beta,double cureProbability, List<Particle> humans, List<Particle> zombies, boolean withEnergy){
         this.rMin = zombies.get(0).getR();
         this.rMax = rMax;
         this.R = R;
@@ -57,6 +60,7 @@ public class CPM {
         this.transformingActions = new LinkedList<>();
         this.beta = beta;
         this.cureProbability = cureProbability;
+        this.withEnergy = withEnergy;
     }
 
     public void execute() throws IOException {
@@ -327,8 +331,19 @@ public class CPM {
         if(closestZombie == null){
             human.setVx(0);
             human.setVy(0);
+            if (withEnergy) {
+                human.setEnergy(human.getEnergy() + 2 * ENERGY_CHANGE);
+                if (human.getEnergy() > MAX_ENERGY)
+                    human.setEnergy(MAX_ENERGY);
+            }
             return;
+        } else if (withEnergy) {
+            human.setEnergy(human.getEnergy() - ENERGY_CHANGE);
+            if (human.getEnergy() < 0)
+                human.setEnergy(0);
         }
+
+
         // Avoid human
         double[] awayFromHumanDir = {0, 0};
         if (closestHuman != null){
@@ -354,6 +369,10 @@ public class CPM {
         finalDirection[1] = finalDirection[1] / distFinal;
         human.setVx((finalDirection[0] * vdh * Math.pow((human.getR() - rMin) / (rMax - rMin), beta)));
         human.setVy((finalDirection[1] * vdh * Math.pow((human.getR() - rMin) / (rMax - rMin), beta)));
+        if (withEnergy){
+            human.setVx(human.getVx() * human.getEnergy());
+            human.setVy(human.getVy() * human.getEnergy());
+        }
     }
 
     private void giveZombieTarget(Particle zombie, Particle closestHuman) {

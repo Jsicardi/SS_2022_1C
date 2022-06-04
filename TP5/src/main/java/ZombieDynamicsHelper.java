@@ -36,7 +36,7 @@ public abstract class ZombieDynamicsHelper {
             humanY = Double.parseDouble(tokenizer.nextToken());
             humanVx = Double.parseDouble(tokenizer.nextToken());
             humanVy = Double.parseDouble(tokenizer.nextToken());
-            humans.add(new Particle(humanX,humanY,humanVx,humanVy,rads.get(i)));
+            humans.add(new Particle(humanX,humanY,humanVx,humanVy,rads.get(i), 2));
             i++;
         }
         return humans;
