@@ -25,18 +25,24 @@ for nh in nhs:
         file = open("{0}{1}_{2}.txt".format(path_format, nh, i+1))
         lines = file.readlines()
         nps = []
+        transf_zombies = 0
         for line in lines:
             tokens = line.replace("\n", "").split('\t')
             if(len(tokens) == 1):
                 #treat nps
                 if(iteration >= 0):
+                    np += (transf_zombies / 2)
                     nps.append(np)
+                    transf_zombies = 0
                 np = 0
                 iteration += 1
             else:
                 if(tokens[5] == "2"):
                     np += 1
+                if(tokens[5] == "1"):
+                    transf_zombies+=1
         #add last iteration
+        np += (transf_zombies / 2)
         nps.append(np)
         fzs.append(np/nh)
         #treat velocities

@@ -10,10 +10,10 @@ public class ZombieVelocityExperiment {
         double vzi = 0.3;
         double vdh = 4;
         double Ap = 2000;
-        double Bp = 0.5;
-        double savingT = 0.1;
+        double Bp = 0.08;
+        double savingT = 1;
         double transformationT = 7;
-        double tf = 50;
+        double tf = 300;
         double R = 11;
         double beta = 1;
 
