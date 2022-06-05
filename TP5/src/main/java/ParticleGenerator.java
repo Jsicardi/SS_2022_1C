@@ -47,12 +47,12 @@ public class ParticleGenerator {
             double distance = 0;
             double humanAngle = 0;
             double humanX = 0, humanY = 0;
-            while(superpositions(humanX, humanY, particles, rmax)) {
+            do {
                 humanAngle = Math.toRadians(Math.random() * 360);
-                distance = Math.random() * (R - rmax - 1) + 1;
+                distance = (Math.random() * ((R - rmax)- 1)) + 1;
                 humanX = Math.cos(humanAngle) * distance;
                 humanY = Math.sin(humanAngle) * distance;
-            }
+            } while(superpositions(humanX, humanY, particles, rmax));
             particles.add(new Particle(humanX, humanY));
             dynamicWriter.write(String.format(Locale.US,"%d\t%g\t%g\t0\t0\n",i, humanX, humanY));
         }
