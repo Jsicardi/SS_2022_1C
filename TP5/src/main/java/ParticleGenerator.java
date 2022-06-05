@@ -47,9 +47,9 @@ public class ParticleGenerator {
             double distance = 0;
             double humanAngle = 0;
             double humanX = 0, humanY = 0;
-            while(distance <= 1 || superpositions(humanX, humanY, particles, rmax)) {
+            while(superpositions(humanX, humanY, particles, rmax)) {
                 humanAngle = Math.toRadians(Math.random() * 360);
-                distance = Math.random() * (R - rmax);
+                distance = Math.random() * (R - rmax - 1) + 1;
                 humanX = Math.cos(humanAngle) * distance;
                 humanY = Math.sin(humanAngle) * distance;
             }
