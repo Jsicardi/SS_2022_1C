@@ -85,7 +85,7 @@ public class ParticleGenerator {
 
     private static boolean superpositions(double x, double y, List<Particle> particles, double rmax) {
         for (Particle particle : particles) {
-            if(Math.sqrt(Math.pow((particle.getY() - y), 2) + Math.pow((particle.getX() - x), 2)) <= rmax) {
+            if(Math.sqrt(Math.pow((particle.getY() - y), 2) + Math.pow((particle.getX() - x), 2)) <= 2*rmax) {
                 return true;
             }
         }
